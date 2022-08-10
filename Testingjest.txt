@@ -1,0 +1,128 @@
+https://jestjs.io/docs/getting-started
+https://jestjs.io/docs/api
+Jest got introduced by Facebook for testing JavaScript and especially React applications. It's one of the most popular ways to test React components nowadays.
+
+Jest is a delightful JavaScript testing framework with a focus on simplicity. It can be installed with npm or Yarn. Jest fits into a broader category of utilities known as test runners. It works great for React applications, but it also works great outside of React applications.
+
+npm install axios
+
+index.js
+import React from 'react';
+import ReactDOM from 'react-dom';
+import App from './App';
+ReactDOM.render(<App />, document.getElementById('app'));
+
+=============
+app.js
+import React from 'react';
+import axios from 'axios';
+export const dataReducer = (state, action) => {
+  if (action.type === 'SET_ERROR') {
+    return { ...state, list: [], error: true };
+  }
+  if (action.type === 'SET_LIST') {
+    return { ...state, list: action.list, error: null };
+  }
+  throw new Error();
+};
+const initialData = {
+  list: [],
+  error: null,
+};
+const App = () => {
+  const [counter, setCounter] = React.useState(0);
+  const [data, dispatch] = React.useReducer(dataReducer, initialData);
+  React.useEffect(() => {
+    axios
+      .get('http://hn.algolia.com/api/v1/search?query=react')
+      .then(response => {
+        dispatch({ type: 'SET_LIST', list: response.data.hits });
+      })
+      .catch(() => {
+        dispatch({ type: 'SET_ERROR' });
+      });
+  }, []);
+  return (
+    <div>
+      <h1>My Counter</h1>
+      <Counter counter={counter} />
+      <button type="button" onClick={() => setCounter(counter + 1)}>
+        Increment
+      </button>
+      <button type="button" onClick={() => setCounter(counter - 1)}>
+        Decrement
+      </button>
+      <h2>My Async Data</h2>
+      {data.error && <div className="error">Error</div>}
+      <ul>
+        {data.list.map(item => (
+          <li key={item.objectID}>{item.title}</li>
+        ))}
+      </ul>
+    </div>
+  );
+};
+export const Counter = ({ counter }) => (
+  <div>
+    <p>{counter}</p>
+  </div>
+);
+export default App;
+
+========================
+npm install --save-dev jest
+
+package.json
+{
+  ...
+  "scripts": {
+    "start": "webpack-dev-server --config ./webpack.config.js --mode development",
+    "test": "jest",
+    "test:watch": "npm run test -- --watch"
+  },
+  ...
+}
+
+
+App.spec.js
+describe('My Test Suite', () => {
+  it('My Test Case', () => {
+    expect(true).toEqual(true);
+  });
+});
+
+npm test
+
+npm run test --watchAll
+
+===============
+npm install --save-dev enzyme enzyme-adapter-react-16 react-test-renderer
+
+
+setup.Test.js
+import { configure } from "enzyme";
+import Adapter from "enzyme-adapter-react-16";
+configure({ adapter: new Adapter() });
+
+package.json
+"jest": {
+  "setupFilesAfterEnv": [
+    "./setup-tests.js"
+  ]
+}
+
+it or test -->You would pass a function to this method, and the test runner would execute that function as a block of tests.
+describe--> This optional method is for grouping any number of it or test statements.
+expect--> This is the condition that the test needs to pass. It compares the received parameter to the matcher. It also gives you access to a number of matchers that let you validate different things. You can read more about it in the documentation.
+mount --> This method renders the full DOM, including the child components of the parent component, in which we are running the tests.
+shallow --> This renders only the individual components that we are testing. It does not render child components. This enables us to test components in isolation.
+App.test.js
+it("renders without crashing", () => {
+  shallow(<App />);
+});
+
+it("renders Account header", () => {
+  const wrapper = shallow(<App />);
+  const welcome = <h1>Display Active Users Account Details</h1>;
+  expect(wrapper.contains(welcome)).toEqual(true);
+});

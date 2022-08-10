@@ -1,0 +1,404 @@
+What is react router?
+React router is a routing library built on top of the react which is used to create the routing in react apps.
+
+react-router-native: It is used for mobile applications.
+react-router-dom: It is used for web applications design.
+		npm install react-router-dom --save  
+
+The <Route> component is the most important component in React router. It renders some UI if the current location matches the route’s path. Ideally, a <Route> component should have a prop named path, and if the pathname is matched with the current location, it gets rendered.
+
+<Route> has three props that you can you use to define what gets rendered:
+BrowserRouter
+BrowserRouter is the router implementation that uses the HTML5 history API to keep your UI up to date with the browser URL.
+
+It is BrowserRouter’s responsibility to store all the components and its routes as an object.
+
+Switch
+Switch components are used to render the default components once the app rendered, and it will switch between routes as needed.
+
+Route
+The route is a statement that holds the specific path of the app along with the component’s name and renders it once it matches the URL.
+
+Link
+The link is similar to the HREF link, which allows you to redirect to the specific components based on the specified path.
+
+1.component: We’ve already seen this in action. When the URL is matched, the router creates a React element from the given component using React.createElement.
+2.render: This is handy for inline rendering. The render prop expects a function that returns an element when the location matches the route’s path.
+3.children: The children prop is similar to render in that it expects a function that returns a React element. However, children gets rendered regardless of whether the path is matched with the location or not.
+
+The <Link> component, on the other hand, is used to navigate between pages. It’s comparable to the HTML anchor element. However, using anchor links would result in a browser refresh, which we don’t want. So instead, we can use <Link> to navigate to a particular URL and have the view re-rendered without a browser refresh.
+
+The path is used to identify the portion of the URL that the router should match. It uses the Path-to-RegExp library to turn a path string into a regular expression. It will then be matched against the current location.
+
+
+match.url. A string that returns the matched portion of the URL. This is particularly useful for building nested <Link>s
+match.path. A string that returns the route’s path string — that is, <Route path="">. We’ll be using this to build nested <Route>s.
+match.isExact. A boolean that returns true if the match was exact (without any trailing characters).
+match.params. An object containing key/value pairs from the URL parsed by the Path-to-RegExp package.
+
+
+Redirect
+Like the server-side redirects, <Redirect> will replace the current location in the history stack with a new location. The new location is specified by the to prop. Here’s how we’ll be using <Redirect>:
+
+<Redirect to={{pathname: '/login', state: {from: props.location}}}
+
+
+Benefits of React Router:
+Add routing to different views/components on Single Page Applications
+Composable
+Easily add links after designing the webpage
+React Router conditionally renders certain components depending on the route from the URL.
+
+
+The <BrowserRouter> is more popular amongst the two because it uses the HTML5 History API to keep track of your router history. The <HashRouter>, on the other hand, uses the hash portion of the URL (window.location.hash) to remember things. If you intend to support legacy browsers, you should stick with <HashRouter>.
+
+// <BrowserRouter>
+http://example.com/about
+
+// <HashRouter>
+http://example.com/#/about
+
+Ex:
+import { BrowserRouter } from "react-router-dom";
+
+ReactDOM.render(
+  <BrowserRouter>
+    <App />
+  </BrowserRouter>,
+  document.getElementById("root")
+);
+
+history is a JavaScript library that lets you easily manage session history anywhere JavaScript runs. history provides a minimal API that lets you manage the history stack, navigate, confirm navigation, and persist state between sessions.
+
+Each router component creates a history object that keeps track of the current location (history.location) and also the previous locations in a stack. When the current location changes, the view is re-rendered and you get a sense of navigation. How does the current location change? The history object has methods such as history.push() and history.replace() to take care of that. history.push() is invoked when you click on a <Link> component, and history.replace() is called when you use <Redirect>. Other methods — such as history.goBack() and history.goForward() — are used to navigate through the history stack by going back or forward a page.
+
+
+
+import React from 'react'
+class Users extends React.Component {
+  render() {
+    return <h1>Users</h1>
+  }
+}
+export default Users
+============
+import React from 'react'
+class Contact extends React.Component {
+  render() {
+    return <h1>Contact</h1>
+  }
+}
+export default Contact
+
+In the Route component, we need to pass the two props
+1.path: it means we need to specify the path.
+2.component: which component user needs to see when they will navigate to that path.
+
+To tell the <Route> tags which component to load, simply add a path attribute and the name of the component you want to load with component attribute.
+<Route path="/users" component={Users} />
+Switch element (open and closing tags). These ensure that only one component is rendered at a time.
+
+
+What is the difference between NavLink and Link?
+The link is used to navigate the different routes on the site. But NavLink is used to add the style attributes to the active routes.
+import React from 'react'
+import { Route, Link,NavLink, BrowserRouter as Router,Switch } from 'react-router-dom';
+import Register from './Register';
+import Mytable from './Mytable';
+import Users from './Users';
+import Greeting from './Greeting';
+import Notfound from './Notfound';
+import App from './App';
+import './Router.css';
+
+  const routing = (
+    <Router>
+      <div>
+        <ul>
+          <li>
+            <NavLink exact activeClassName="active" to="/">
+              Home
+            </NavLink>
+          </li>
+          <li>
+            <NavLink activeClassName="active" to="/users">
+              Users
+            </NavLink>
+          </li>
+          <li>
+            <NavLink activeClassName="active" to="/register">
+              Register
+            </NavLink>
+          </li>
+          <li>
+            <NavLink activeClassName="active" to="/mytable">
+              MyTable
+            </NavLink>
+          </li>
+          <li>
+            <NavLink activeClassName="active" to="/greeting">
+              Greeting
+            </NavLink>
+          </li>
+        </ul>
+        <br />
+        <Switch>
+          <Route exact path="/" component={App} />
+          <Route path="/users" component={Users} />
+          <Route path="/register" component={Register} />
+          <Route path="/mytable" component={Mytable} />
+          <Route path="/greeting" component={Greeting} />
+          <Route component={Notfound} />
+        </Switch>
+      </div>
+    </Router>
+  )
+
+  export default routing;
+================
+//app.css
+.contactform{
+  margin: 20px;
+}
+
+input{
+  margin-bottom: 5px;
+  height: 20px;
+  border: 1px solid #d8d8d8;
+  padding: 3px;
+}
+
+textarea{
+  border: 1px solid #d8d8d8;
+  padding: 3px;
+}
+
+button{
+  padding: 10px;
+  border: 1px solid green;
+  background-color: lightblue;
+  border-radius: 3px;
+}
+
+.error{
+  margin-left: 5px;
+  font-size: 13px;
+  color: red;
+} 
+
+=======
+//app.js
+import React from 'react';
+ import './App.css';
+ // import 'bootstrap/dist/css/bootstrap.min.css';
+
+class App extends React.Component {
+  constructor(props){
+    super(props);
+
+    this.state = {
+      fields: {},
+      errors: {}
+    }
+  }
+
+  handleValidation(){
+    let fields = this.state.fields;
+    let errors = {};
+    let formIsValid = true;
+
+    //Name
+    if(!fields["name"]){
+      formIsValid = false;
+      errors["name"] = "Name Cannot be empty";
+    }
+
+    if(typeof fields["name"] !== "undefined"){
+      if(!fields["name"].match(/^[a-zA-Z]+$/)){
+        formIsValid = false;
+        errors["name"] = "Only letters please";
+      }      	
+    }
+
+    //Email
+    if(!fields["email"]){
+      formIsValid = false;
+      errors["email"] = "Email Cannot be empty";
+    }
+
+    if(typeof fields["email"] !== "undefined"){
+      let lastAtPos = fields["email"].lastIndexOf('@');
+      let lastDotPos = fields["email"].lastIndexOf('.');
+
+      if (!(lastAtPos < lastDotPos && lastAtPos > 0 && fields["email"].indexOf('@@') == -1 && lastDotPos > 2 && (fields["email"].length - lastDotPos) > 2)) {
+        formIsValid = false;
+        errors["email"] = "Email is not valid";
+      }
+    }
+
+//Phone
+if(!fields["phone"]){
+  formIsValid = false;
+  errors["phone"] = "Phone Cannot be empty";
+}
+
+//Address
+if(!fields["address"]){
+  formIsValid = false;
+  errors["address"] = "Address Cannot be empty";
+}
+
+    this.setState({errors: errors});
+    return formIsValid;
+  }
+
+  contactSubmit(e){
+    e.preventDefault();
+    if(this.handleValidation()){
+      alert("Form submitted");
+    }else{
+      alert("Form has errors.")
+    }
+
+  }
+
+  handleChange(field, e){    		
+    let fields = this.state.fields;
+    fields[field] = e.target.value;        
+    this.setState({fields});
+  }
+
+  render(){
+    return (
+      <div>        	
+        <form name="contactform" className="contactform" onSubmit= {this.contactSubmit.bind(this)}>
+          <div className="col-md-6">
+            <fieldset>
+              <input ref="name" type="text" size="30" placeholder="Name" onChange={this.handleChange.bind(this, "name")} value={this.state.fields["name"]}/>
+              <span className="error">{this.state.errors["name"]}</span>
+              <br/>
+              <input refs="email" type="text" size="30" placeholder="Email" onChange={this.handleChange.bind(this, "email")} value={this.state.fields["email"]}/>
+              <span className="error">{this.state.errors["email"]}</span>
+              <br/>
+              <input refs="phone" type="text" size="30" placeholder="Phone" onChange={this.handleChange.bind(this, "phone")} value={this.state.fields["phone"]}/>
+              <span className="error">{this.state.errors["phone"]}</span>
+              <br/>
+              <input refs="address" type="text" size="30" placeholder="Address" onChange={this.handleChange.bind(this, "address")} value={this.state.fields["address"]}/>
+              <span className="error">{this.state.errors["address"]}</span>
+              <br/>
+            </fieldset>
+          </div>
+          <div className="col-md-6">
+            <fieldset>
+              <textarea refs="message" cols="28" rows="10"
+                className="comments" placeholder="Message" onChange={this.handleChange.bind(this, "message")}>{this.state.fields["message"]}</textarea>
+            </fieldset>
+          </div>
+          <div className="col-md-12">
+            <fieldset>
+              <button className="btn-lg pro" id="submit" value="Submit">Send Message</button>
+            </fieldset>
+          </div>
+        </form>
+      </div>
+    )
+  }
+}
+export default App;
+
+// index.css
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+//index.js
+
+import routing from './Router';
+import { Router } from 'react-router-dom';
+
+
+ReactDOM.render(
+  routing,
+  document.getElementById('root')
+);
+
+============
+//Notfound.js
+
+import React from 'react'
+const Notfound = () => <h1>Page Not found</h1>
+export default Notfound
+
+
+//Router.css
+h1{
+    color:red;
+  }
+  code {
+    font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+      monospace;
+  }
+  li{
+    float: left;
+    width: 100px;
+    list-style: none;
+    font-weight:bold;
+  }
+  li a{
+    text-decoration: none;
+  }
+  ==================
+  import React from 'react'
+import { Route, Link } from 'react-router-dom'
+const User = ({ match }) => <p>{match.params.id}</p>
+class Users extends React.Component {
+  render() {
+    const { url } = this.props.match
+    return (
+      <div>
+        <h1>Users</h1>
+        <strong>select a user</strong>
+        <ul>
+          <li>
+            <Link to="/users/1">User 1 </Link>
+          </li>
+          <li>
+            <Link to="/users/2">User 2 </Link>
+          </li>
+          <li>
+            <Link to="/users/3">User 3 </Link>
+          </li>
+        </ul>
+        <Route path="/users/:id" component={User} />
+      </div>
+    )
+  }
+}
+export default Users
+=============
+
+function PrivateRoute ({component: Component, authed, ...rest}) {
+  return (
+    <Route
+      {...rest}
+      render={(props) => authed === true
+        ? <Component {...props} />
+        : <Redirect to={{pathname: '/Contact', state: {from: props.location}}} />}
+    />
+  )
+}
+
+<PrivateRoute authed={this.state.authed} path='/Contact' component={Contact} />
+
+
+https://tylermcginnis.com/react-router-protected-routes-authentication/

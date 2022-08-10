@@ -1,0 +1,348 @@
+https://reactjs.org/docs/components-and-props.html
+https://reactjs.org/tutorial/tutorial.html#overview
+
+React script allows us to write React components.
+
+Components are independent and reusable bits of code. They serve the same purpose as JavaScript functions, but work in isolation and return HTML via a render() function.
+
+components are like functions. They accept arbitrary inputs (called “props”) and return React elements describing what should appear on the screen.
+
+Components are the building blocks of any React app and a typical React app will have many of these. Simply put, a component is a JavaScript class or function that optionally accepts inputs i.e. properties(props) and returns a React element that describes how a section of the UI (User Interface) should appear.
+
+ReactDOM script allows us to place our components and work with them in the context of the DOM
+The Babel script allows us to transpile ES6 to ES5. 
+
+Components − React is all about components. You need to think of everything as a component. This will help you maintain the code when working on larger scale projects.
+
+
+Components are independent and reusable bits of code. They serve the same purpose as JavaScript functions, but work in isolation and returns HTML via a render function.
+Components come in two types
+
+	1.Functional Components (Stateless components)
+		function test(){
+		return ();
+		}
+	2.Class Components (Statefull components)
+		class second extends react.component{
+		}
+
+Functional components
+These components are purely presentational and are simply represented by a function that optionally takes props and returns a React element to be rendered to the page.
+
+A Functional component is a function that takes props and returns JSX
+They do not have state or lifecycle methods.
+
+Functional components are easier to read, debug, and test. They offer performance benefits, decreased coupling, and greater reusability.
+
+Functional because they are basically functions
+Stateless because they do not hold and/or manage state
+Presentational because all they do is output UI elements
+Stateless functional components typically focus on UI; state should be managed by higher-level “container” components, or via Flux/Redux etc. Stateless functional components don’t support state or lifecycle methods.
+
+Benefits:
+
+No class overhead
+Don't have to worry about this keyword
+Easy to write and easy to understand
+Don't have to worry about managing state values
+Performance improvement
+
+It is simple javascript functions that simply returns html UI
+It is also called “stateless” components because they simply accept data and display them in some form that is they are mainly responsible for rendering UI.
+It accept properties(props) in function and return html(JSX)
+It gives solution without using state
+There is no render method used in functional components.
+These can be typically defined using arrow functions but can also be created with the regular function keyword.
+
+import React from 'react';
+ 
+function App() {
+  const greeting = 'Hello Function Component!';
+ 
+  return <h1>{greeting}</h1>;
+}
+ 
+export default App;
+======================
+import React from 'react';
+ 
+function App() {
+  return <Headline />;
+}
+ 
+function Headline() {
+  const greeting = 'Hello Function Component!';
+ 
+  return <h1>{greeting}</h1>;
+}
+ 
+export default App;
+
+========================
+ props are used to pass information from component to component.
+
+import React from 'react';
+ 
+function App() {
+  const greeting = 'Hello Function Component!';
+ 
+  return <Headline value={greeting} />;
+}
+ 
+function Headline(props) {
+  return <h1>{props.value}</h1>;
+}
+ 
+export default App;
+===========================
+import React from 'react';
+ 
+const App = () => {
+  const greeting = 'Hello Function Component!';
+ 
+  return <Headline value={greeting} />;
+};
+ 
+const Headline = ({ value }) => {
+  return <h1>{value}</h1>;
+};
+ 
+export default App;
+===================
+//with arrow function
+import React from 'react';
+const Person = (props) => (
+ <div>
+ <h1>Hello, {props.name}</h1>
+ </div>
+);
+export default Person;
+
+//without arrow function
+import React from 'react';
+function Person(props){
+return (
+ <div>
+ <h1>Hello, {props.name}</h1>
+ </div>
+)
+};
+ 
+export default Person;
+
+
+===================
+React Hooks
+import React, { useState } from 'react';
+ 
+const App = () => {
+  return <Headline />;
+};
+ 
+const Headline = () => {
+  const [greeting, setGreeting] = useState(
+    'Hello Function Component!'
+  );
+ 
+  return <h1>{greeting}</h1>;
+};
+ 
+export default App;
+===========================
+Class Components:
+These components are created using ES6’s class syntax. They have some additional features such as the ability to contain logic (for example methods that handle onClick events), local state.
+
+Class because they are basically classes
+Smart because they can contain logic
+Stateful because they can hold and/or manage local state
+Container because they usually hold/contain numerous other (mostly functional) components
+
+State is the place where the data comes from. We should always try to make our state as simple as possible and minimize the number of stateful components.
+
+Create a Class ComponentRules:
+When creating a React component, the component's name must start with an upper case letter.
+The component has to include the extends React.Component statement, this statement creates an inheritance to React.Component, and gives your component access to React.Component's functions.
+The component also requires a render() method, this method returns HTML.
+
+a component represent the part of user interface
+component are reusable and can be use in anywhere in user interface
+
+Props is not passed as an argument to the class
+Rules:
+is an ES6 class, will be a component once it ‘extends’ React component.
+can accept props (in the constructor) if needed
+can maintain its own data with state
+must have a render( ) method which returns a React element (JSX), or null
+
+It is regular ES6 classes that extends component class form react library
+Also known as “stateful” components because they implement logic and state.
+It must have render() method returning html
+It has complex UI Logic
+You pass props to class components and access them with this.props
+
+How do I choose which component type to use?
+
+Use a class component if you:
+=> need to manage local state
+=> need to add lifecycle methods to your component
+=> need to add logic for event handlers
+Otherwise, always use a functional component.
+
+
+import React, { Component } from 'react';  
+class App extends Component{  
+   render(){  
+	var myStyle = {  
+         fontSize: 80,  
+         fontFamily: 'Courier',  
+         color: 'red'  
+      }  
+
+      var  i = 5;  
+      return (  
+         <div>  
+		<div style={myStyle}>My Style content</div>
+            <h1>{i === 5 ? 'True!' : 'False!'}</h1>  
+         </div>  
+      );  
+   }  
+}  
+export default App;  
+
+=================
+import React, { Component } from 'react';
+class Person extends Component {
+ constructor(){
+ super();
+ this.state = {
+ name: 'Srinivas';
+ }
+ }
+ 
+ render() {
+ return (
+ <div>
+ <h1>Hello {this.state.name}</h1>
+ </div>
+ );
+ }
+}
+export default Person;
+
+==================
+
+import React from 'react';
+
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+      
+    // We declare the state as shown below
+    
+    this.state = {                           
+      x: "This is x from state",    
+      y: "This is y from state"
+    }
+  }
+  render() {
+    return (
+      <div>
+        <h1>{this.state.x}</h1>
+        <h2>{this.state.y}</h2>
+      </div>
+    );
+  }
+}
+export default App;
+=========
+import React from 'react';
+
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+    
+    // We declare the state as shown below
+    this.state = {                           
+      x: "This is x from state",    
+      y: "This is y from state"
+    }
+  }
+
+  render() {
+    let x1 = this.state.x;
+    let y1 = this.state.y;
+
+    return (
+      <div>
+        <h1>{x1}</h1>
+        <h2>{y1}</h2>
+      </div>
+    );
+  }
+}
+export default App;
+==============
+  Props:
+Props are similar to method arguments. They are passed to a component where that component is used.
+Props is immutable. They are read-only.
+
+import React from 'react';
+
+  class Propex extends React.Component{
+      constructor(props){
+          super(props)
+      }
+    render(){
+      return(
+        <div>
+          <label>I am a {this.props.character} person.</label>
+        </div>
+      );
+    }
+  }
+
+  export default Propex;
+<Propex character="Good"></Propex>
+  
+  =================
+  import React from 'react';
+
+function Counter() {
+  let n = 0;
+  
+  function increment(){
+    n = n + 1;
+    console.log(n)
+  }
+  
+  return (
+      <div>
+        <span>{n}</span>
+        <button onClick={increment}>Increment </button>
+      </div>
+  );
+}
+
+export default Counter;
+==================
+import React, { useState } from 'react';
+
+function Counter() {
+  const [n, setN] = useState(0);
+  
+  console.log('re-render');
+  
+  function increment(){
+    setN(n + 1);
+    console.log(n)
+  }
+  
+  return (
+    <div>
+        <span>{n}</span>
+        <button onClick={increment}>Increment </button>
+    </div>
+  );
+}
+
+export default Counter;

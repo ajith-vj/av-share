@@ -1,0 +1,170 @@
+For a component to be reusable, it has to take in data or data sets (via props) and return an output (usually through a function passed via props). It is recommended that mutable state should be kept in the state property of a component to ensure they work correctly
+
+=======================
+import React from 'react';
+class Formex extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {value: ''};
+
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  handleChange(event) {
+    this.setState({value: event.target.value});
+  }
+
+  handleSubmit(event) {
+    alert('A name was submitted: ' + this.state.value);
+    event.preventDefault();
+  }
+
+  render() {
+    return (
+      <form onSubmit={this.handleSubmit}>
+        <label>
+          Name:
+          <input type="text" value={this.state.value} onChange={this.handleChange} />
+        </label>
+        <input type="submit" value="Submit" />
+      </form>
+    );
+  }
+}
+export default Formex;
+=====================
+import React from 'react';
+class Eventex extends React.Component {
+    shoot = (a, b) => {
+      alert(b.type);
+      alert(a);
+      /*
+      'b' represents the React event that triggered the function,
+      in this case the 'click' event
+      */
+    }
+    render() {
+      return (
+        <button
+          onClick={(ev) => this.shoot("Goal", ev)}
+        >Take the shot!</button>
+      );
+    }
+  }
+  export default Eventex;
+  ================
+import React, {Component} from 'react'
+
+import List from './List';
+
+export default class Formex2 extends Component{
+    
+    constructor(props) {
+        super();
+        this.state={users:[], showSearchResult: false, searchResult: []};
+    }
+
+    registerClick(){
+        let users = this.state.users.slice();
+        if(users.indexOf(this.refs.mail_id.value) === -1){
+            users.push(this.refs.mail_id.value);
+            this.refs.mail_id.value = '';
+            this.setState({users});
+        }else{
+            alert('user already registered');
+        }
+    }
+
+    searchClick(){
+        let users = this.state.users;
+        let index = users.indexOf(this.refs.search.value); 
+        if(index >= 0){
+            this.setState({searchResult: users[index], showSearchResult: true});
+        }else{
+            alert('no user found with this mail id');
+        }
+    }
+
+    hideSearchResult(){
+        this.setState({showSearchResult: false});
+    }
+
+    render() {
+        return (
+            <div>
+                <input placeholder='email-id' ref='mail_id'/>
+                <input type='submit' value='Click here to register' onClick={this.registerClick.bind(this)}/>
+                <input style={{marginLeft: '100px'}} placeholder='search' ref='search'/>
+                <input type='submit' value='Click here to register' onClick={this.searchClick.bind(this)}/>
+                {this.state.showSearchResult ?
+                    <div>
+                        Search Result:
+                        <List users={[this.state.searchResult]}/>
+                        <p onClick={this.hideSearchResult.bind(this)}>Close this</p>
+                    </div>
+                    :
+                    <div>
+                        Registered users:
+                        <br/>
+                        {this.state.users.length ? 
+                            <List users={this.state.users}/>
+                            :
+                            "no user is registered"
+                        }
+                    </div>
+                }
+            </div>
+        );
+    }
+}
+====================
+import React from 'react';
+var colors = ['#6A1B9A', '#76FF03', '#4527A0'];
+
+var List = (props) => {
+    return(
+        <div>
+            {
+                props.users.map((user, i)=>{
+                    return(
+                        <div key={i} style={{color: colors[i%3]}}>
+                            {user}
+                        </div>
+                    );                
+                })
+            }
+        </div>
+    );
+}
+
+export default List;
+
+=====================
+
+import React, { useState } from 'react';
+ 
+const Hookex = (props) => {
+return (
+<div><h2>{props.myname}</h2><Headline /></div>
+);
+};
+ 
+const Headline = () => {
+  const [greeting, setGreeting] = useState(
+    'React hook state Component!'
+  );
+ 
+  const handleChange = event => setGreeting(event.target.value);
+ 
+  return (
+    <div>
+      <h1>{greeting}</h1>
+ 
+      <input type="text" value={greeting} onChange={handleChange} />
+    </div>
+  );
+};
+ 
+export default Hookex;
+==================

@@ -1,0 +1,171 @@
+import React from 'react';
+import './Mytable.css';
+class Mytable extends React.Component {
+	constructor(props) {
+	   super(props)
+	   this.state = {
+		  students: [
+			 { id: 1, name: 'SrinivasI', age: 31, email: 'ippili@gmail.com' },
+			 { id: 2, name: 'Prashanth', age: 29, email: 'prashanth@gmail.com' },
+			 { id: 3, name: 'Swathi', age: 26, email: 'swathi@gmail.com' },
+             { id: 4, name: 'Amar', age: 25, email: 'amar@gmail.com' },
+             { id:5, name:'Guru', age:30, email:'guru@gmail.com'},
+             { id:6, name:'Admin', age:20, email:'admin@gmail.com'},
+             { id:7, name:'Ankit', age:30, email:'ankit@gmail.com'},
+             { id:8, name:'Naga', age:50, email:'naga@gmail.com'}
+		  ]
+	   }
+    }
+
+    renderTableData() {
+        return this.state.students.map((student, index) => {
+           const { id, name, age, email } = student //destructuring
+           return (
+              <tr key={id}>
+                 <td>{id}</td>
+                 <td>{name}</td>
+                 <td>{age}</td>
+                 <td>{email}</td>
+              </tr>
+           )
+        })
+     }
+     renderTableHeader(){
+        let header = Object.keys(this.state.students[0])
+        return header.map((key, index) => {
+           return <th key={index}>{key.toUpperCase()}</th>
+        })
+     }
+     render() {
+        return (
+           <div>
+              <h1 id='title'>React Dynamic Table</h1>
+              <table id='students'>
+                 <tbody>
+                 <tr>{this.renderTableHeader()}</tr>
+                    {this.renderTableData()}
+                 </tbody>
+              </table>
+           </div>
+        )
+     }
+}
+export default Mytable;
+====================
+#title {
+    text-align: center;
+    font-family: arial, sans-serif;
+    color:red;
+  }
+  
+  #students {
+    text-align: center;
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    border: 3px solid #ddd;
+    width: 100%;
+  }
+  
+  #students td, #students th {
+    border: 1px solid #ddd;
+    padding: 8px;
+  }
+  
+  #students tr:nth-child(even){background-color: lightblue;}
+  
+  #students tr:hover {background-color: red;}
+  
+  #students th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: center;
+    background-color: #4CAF50;
+    color: white;
+  }
+  ========================
+  import React from 'react';
+import ReactDOM from 'react-dom';
+
+class Register extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      username: '',
+      age: null,
+    };
+  }
+  myChangeHandler = (event) => {
+    let nam = event.target.name;
+    let val = event.target.value;
+    if (nam === "age") {
+      if (!Number(val)) {
+        alert("Your age must be a number");
+      }
+    }
+    this.setState({[nam]: val});
+  }
+  render() {
+    return (
+      <form>
+      <h1>Hello {this.state.username} {this.state.age}</h1>
+      <p>Enter your name:</p>
+      <input
+        type='text'
+        name='username'
+        onChange={this.myChangeHandler}
+      />
+      <p>Enter your age:</p>
+      <input
+        type='text'
+        name='age'
+        onChange={this.myChangeHandler}
+      />
+      </form>
+    );
+  }
+}
+
+export default Register
+
+==========================
+import React,{Component} from 'react'
+class LoginForm extends Component {
+	constructor(props) {
+	  super(props);
+	  this.state = {value: ''};
+  
+	  this.handleChange = this.handleChange.bind(this);
+	  this.handleSubmit = this.handleSubmit.bind(this);
+	}
+  
+	handleChange(event) {
+	  this.setState({value: event.target.value});
+	}
+  
+	handleSubmit(event) {
+	  alert('A name was submitted: ' + this.state.value);
+	  event.preventDefault();
+	}
+  
+	render() {
+	  return (
+		<form onSubmit={this.handleSubmit}>
+		  <label>
+          Pick your favorite flavor:
+          <select value={this.state.value} onChange={this.handleChange}>
+            <option value="grapefruit">Grapefruit</option>
+            <option value="lime">Lime</option>
+            <option value="coconut">Coconut</option>
+            <option value="mango">Mango</option>
+          </select>
+        </label>		 
+		  <input type="submit" value="Submit" />
+		</form>
+	  );
+	}
+  }
+  
+  export default LoginForm
+  
+ 
+  

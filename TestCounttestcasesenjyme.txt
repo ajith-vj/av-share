@@ -1,0 +1,73 @@
+Enzyme is a library that is used to test React applications. It’s designed to test components, and it makes it possible to write assertions that simulate actions that confirm whether the UI is working correctly.
+
+App.js
+import React, { Component } from 'react';
+
+    class App extends Component {
+      constructor() {
+        super();
+        this.state = {
+          count: 0,
+        }
+      }
+
+      makeIncrementer = amount => () =>
+        this.setState(prevState => ({
+          count: prevState.count + amount,
+        }));
+
+      increment = this.makeIncrementer(1);
+
+      decrement = this.makeIncrementer(-1);
+
+      render() {
+        return (
+          <div>
+            <p>Count: {this.state.count}</p>
+            <button className="increment" onClick={this.increment}>Increment count</button>
+            <button className="decrement" onClick={this.decrement}>Decrement count</button>
+          </div>
+        )
+      }
+    }
+
+    export default App;
+	==========================
+	npm install enzyme enzyme-adapter-react-16 --dev
+setUpTest.js
+
+import { configure } from 'enzyme';
+    import Adapter from 'enzyme-adapter-react-16';
+
+    configure({ adapter: new Adapter() });
+	
+	==========
+	App.test.js
+	import React from 'react';
+    import { shallow } from 'enzyme';
+    import App from './App';
+
+    describe('App component', () => {
+      it('starts with a count of 0', () => {
+        const wrapper = shallow(<App />);
+        const text = wrapper.find('p').text();
+        expect(text).toEqual('Count: 0');
+      });
+    
+	
+	it('increments count by 1 when the increment button is clicked', () => {
+        const wrapper = shallow(<App />);
+        const incrementBtn = wrapper.find('button.increment');
+        incrementBtn.simulate('click');
+        const text = wrapper.find('p').text();
+        expect(text).toEqual('Count: 1');
+      });
+	
+	it('decrements count by 1 when the decrement button is clicked', () => {
+        const wrapper = shallow(<App />);
+        const decrementBtn = wrapper.find('button.decrement');
+        decrementBtn.simulate('click');
+        const text = wrapper.find('p').text();
+        expect(text).toEqual('Count: -1');
+      });
+    });

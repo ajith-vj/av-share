@@ -1,0 +1,135 @@
+https://snack.expo.io/
+https://reactnative.dev/docs/getting-started
+https://reactnative.dev/docs/tutorial
+
+React Native is a JavaScript framework used for developing a real, native mobile application for iOS and Android. 
+It uses only JavaScript to build a mobile application.
+It is like React, which uses native component rather than using web components as building blocks.
+
+React Native is a JavaScript framework whereas ReactJs (React.js) is a JavaScript library
+
+Advantages of React Native
+1.Cross-Platform Usage: Provide facility of "Learn once write everywhere", it works for both platform Android as well iOS devices.
+2.Class Performance: The code written in React Native are compiled into native code, which enables it for both operating systems as well as it functions in the same way on both the platforms.
+3.JavaScript: The JavaScript knowledge is used to build native mobile apps.
+4.Community: The large community of React and React Native around helps us to find any answer we require.
+5.Hot Reloading: Making a few changes in the code of your app will be immediately visible during development. If business logic is changed, its reflection is live reloaded on screen.
+6.Improving with Time: Some features of iOS and Android are still not supported, and the community is always inventing the best practices.
+7.Native Components: We will need to write some platform specific code if we want to create native functionality which is not designed yet.
+
+Limitation:
+1.Native Components − If you want to create native functionality which is not created yet, you will need to write some platform specific code.
+2.Learning is Tough: React Native is not easy to learn, especially for a fresher in the app development field.
+3.It Lacks the Security Robustness: React Native is a JavaScript library and open-source framework, which creates a gap in the security robustness. When you are creating banking and financial apps where data is highly confidential, experts advice not to choose React Native.
+4.It Takes More Time to Initialize: React Native takes a lot of time for initializing the runtime even for the hi-tech gadgets and devices.
+
+Softwares:
+ Node
+ React Native command line interface
+ Python2
+ JDK
+ Android Studio
+ 
+ 
+ 
+ npm install -g create-react-native-app
+ create-react-native-app FirstReactNativeProj
+ 
+ npx create-react-native-app projname
+ 
+ 
+ npm install -g react-native-cli
+ 
+ one way to run react native apps on your android devise is to using expo. Install expo client in your android devise and scan the above obtained QR code.
+ 
+ If you want to run android emulator using android studio, come out of the current command line by pressing ctrl+c.
+
+Then, execute run eject command as
+ npm run eject
+ 
+ react-native run-android
+ 
+ https://developer.android.com/studio/
+ 
+ To configure the AVD Manager click on the respective icon in the menu bar.
+ 
+ Choose a device definition, Nexus 5X is suggestable.
+ Click on the Next button you will see a System Image window. Select the x86 Images tab.
+ Then, select Marshmallow and click on next.
+ 
+ After configuring your virtual device click on the play button under the Actions column to start your android emulator.
+ 
+ 
+ Open command prompt, browse through your project folder and, execute the react-native run-android command.
+ 
+ 
+ 
+ Folder explanation:
+ import React, {Component} from 'react': imports the library and other components from react module and assign then to variable React.
+const instruction: sets to display the platform-specific message.
+export default class App extends Component: defines the classes that extend the React Component. The export default class modifier makes the class "public". This block of code defines the components that represent the user interface.
+render(): a function that returns a React element.
+return(): returns the result of layout and UI components.
+View: a container that supports the layout accessibility controls. It is a fundamental component for building the UI.
+Text: a React component for displaying text.
+style: a property used for styling the components using StyleSheet.
+styles: used to design individual components.
+{styles.instructions}>{instructions}:
+const styles = StyleSheet.create({}): The StyleSheet class creates the style object that controls the layout and appearance of components. It is similar to Cascading Style Sheets (CSS) used on the Web.
+
+
+React Native State
+There are two types of data state and props in React Native which control the component. The component that uses the state is mutable. They can be changed later on if required. The props component is immutable, and it is fixed throughout the lifetime.
+
+The state is generally initialized in constructor and then call setState when we want to change it
+
+===================
+Generate your React Native project
+If you have the previous prerequisites, let’s get started by generating a new React Native project using React Native CLI.
+
+Head over to a new terminal and run the following command to run the React Native CLI using the npx command:
+
+$ npx react-native init firstapp
+Note: Thanks to the npx tool, you don’t need to install React Native CLI. You can run directly from npm.
+
+We used the init command of React Native CLI to create a project called firstapp.
+
+Next, you need to navigate inside your React Native project and run the Metro Bundler using the following commands:
+
+$ cd firstapp
+$ react-native start
+Metro is a bundler for JavaScript and React Native created by Facebook for compiling the React Native code.
+
+Next, let’s leave Metro running and open a new terminal where you need to run the following commands to build and start your React Native application in the Android emulator you started earlier:
+
+$ cd firstapp 
+$ react-native run-android   
+The run-android command will build and run the app in the Android virtual device.
+
+Note: For iOS, you will need to use the react-native run-ios command to build and run your app.
+
+If your React Native app is successfully built, you’ll see a BUILD SUCCESSFUL message in your terminal and your app will be started in the Android emulator:
+
+React Native App in the Android Emulator
+
+This is a screenshot of our app running inside an Android emulator:
+
+React Native App on Android
+
+Congratulations, you have started your first React Native app in your Android emulator. Now, let’s start writing the code.
+
+The project has the typical folders and configuration files for a Node.js project like the package.json and package-lock.json files and the node_modules folder. We also have these files and folders:
+
+babel.config.js: The configuration file for Babel (A compiler and transpiler for JavaScript)
+metro.config.js: The configuration file for Metro, a JavaScript bundler for React Native,
+app.json: configures parts of our app that don’t belong in code. See this article.
+watchman.config: The configuration file for Watchman, a file watch service,
+.flowconfig: The configuration file for Flow, a static type checker for JavaScript,
+.eslintrc.js: The configuration file for ESLint, a JavaScript and JSX linter (a tool for code quality),
+.buckconfig: The configuration file for Buck, a build system created by Facebook,
+.gitignore and .gitattributes: ignores all files in version control that should be unique to each development machine,
+android: The folder for the Android project,
+ios: The folder for the iOS project,
+__tests__: The folder for tests,
+App.js: The main component in our React Native app,
+index.js: The main file of our application where the components are registered.

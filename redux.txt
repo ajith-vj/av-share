@@ -1,0 +1,406 @@
+https://codesandbox.io/s/github/reduxjs/redux/tree/master/examples/todos
+Install Redux and react-redux.
+Create NewPost component.
+Create the actions.
+Create the rootReducer and postReducer.
+Configure Store.
+Create a container component.
+Display the Post.
+
+npm install redux react-redux --save
+npm install bootstrap --save
+
+npm install --save-dev redux-devtools
+
+view -->Action (Dispatch) --->Reducers (State) -->Store-->View(Subscribe)
+
+
+when a user creates a post, we will call ADD_POST action. This action then calls the reducer function and add the value to the store. So we can not directly modify the store, we need to create an action and then call the reducer function to alter the state of the store.
+Same as a delete, when we try to delete any post, then DELETE_POST action will be triggered.
+
+when the user submits the form, we can trigger an action, and that action call the reducer and modify the global state.
+
+
+Provider component that makes our store accessible throughout our app and a connect function that creates container components that can read the state from the store and dispatch actions.
+ 
+Flux is a Javascript architecture or pattern for UI which runs on a unidirectional data flow and has a centralized dispatcher. It is useful when your project has dynamic data and you need to keep the data updated in an effective manner. It was created by Facebook, and complements React as view.
+
+Redux follows the unidirectional data flow. It means that your application data will follow in one-way binding data flow. As the application grows & becomes complex, it is hard to reproduce issues and add new features if you have no control over the state of your application.
+
+A createStore function can have three arguments. The following is the syntax −
+
+createStore(reducer, [preloadedState], [enhancer])
+A reducer is a function that returns the next state of app. A preloadedState is an optional argument and is the initial state of your app. An enhancer is also an optional argument. It will help you enhance store with third-party capabilities.
+
+store.getState() -->to retrieve the current state of your Redux store.
+store.dispatch({type:'ITEMS_REQUEST'}) -->It allows you to dispatch an action to change a state in your application.
+store.subscribe(()=>{ console.log(store.getState());}) -->It helps you register a callback that Redux store will call when an action has been dispatched. As soon as the Redux state has been updated, the view will re-render automatically.
+
+const unsubscribe = store.subscribe(()=>{console.log(store.getState());});
+unsubscribe();
+
+Actions -->Actions are the only source of information for the store.
+It carries a payload of information from your application to store.
+
+To cause any change in the store, you need to dispatch an action first by using store.dispatch() function. The action object is as follows −
+
+{ type: GET_ORDER_STATUS , payload: {orderId,userId } }
+{ type: GET_WISHLIST_ITEMS, payload: userId }
+
+You can dispatch an action by directly using store.dispatch(). However, it is more likely that you access it with react-Redux helper method called connect(). You can also use bindActionCreators() method to bind many action creators with dispatch function.
+
+
+Reducers are a pure function in Redux. Pure functions are predictable. Reducers are the only way to change states in Redux. It is the only place where you can write logic and calculations. Reducer function will accept the previous state of app and action being dispatched, calculate the next state and returns the new object.
+
+The following few things should never be performed inside the reducer −
+
+Mutation of functions arguments
+API calls & routing logic
+Calling non-pure function e.g. Math.random()
+
+(state,action) => newState
+
+
+STORE − Stores all your application state as a JavaScript object
+
+PROVIDER − Makes stores available
+
+CONTAINER − Get apps state & provide it as a prop to components
+
+COMPONENT − User interacts through view component
+
+ACTIONS − Causes a change in store, it may or may not change the state of your app
+
+REDUCER − Only way to change app state, accept state and action, and returns updated state.  
+
+====================
+inside src folder, create one file called NewPost.js
+we need to import this NewPost.js file inside src >> App.js file.
+
+inside src folder, create three more folders, and their names are following.
+
+containers
+reducers
+actions
+Now, first inside actions folder, create one file called types.js.
+
+When the user submits the form, we need to call these actions. So when a user creates a post, we will call ADD_POST action. This action then calls the reducer function and add the value to the store. So we can not directly modify the store, we need to create an action and then call the reducer function to alter the state of the store.
+
+we need every post a different IDs, so for generating ID on the client side, we use the npm library called uuid.
+
+inside src >> actions >> index.js file.
+
+inside reducers folder, create one file called postReducer.js
+if the action type is matched with fired action, then it will modify the store and change the current state.
+
+
+Import this index.js reducer file inside src >> index.js file.
+
+Inside containers folder, create a component called CreatePost.js.
+We have created the higher order component of NewPost.js file, and that is a CreatePost.js file.
+we import this CreatePost.js file inside src >> App.js file.
+
+
+Post.js component is responsible for rendering out our all the Posts.
+
+https://appdividend.com/wp-content/uploads/2017/08/Redux-Tutorial-2017.jpg
+
+Flux Data Flow
+
+1.The user interacts with the view and view triggers an action.
+
+2.Action dispatch the corresponding function and then that function change the store.
+
+3.When store updates its data, the subscriber views are automatically updated. We do not need to modify the data in different modules manually.
+
+It is a unidirectional data flow. When the application gets bigger and bigger, then multiple stores manage the data. So that scenario will look like this.
+
+ 
+Flux has Multiple Stores.
+
+Redux
+
+Redux is the predictable state container for JavaScript applications. Redux is also following the Unidirectional flow, but it is entirely different from Flux. Flux has multiple stores.
+
+Redux has a Single Store. 
+
+Three Principles Of Redux
+
+Single source of truth.
+
+The state is read-only.
+
+Changes are made with pure functions.
+
+ 
+
+It is the state of our whole application is stored in an object within a single store.  There is an only way to change the state is to emit an action, an object describing what happened. To specify how actions transform the state, you write pure reducers.
+
+Actions
+Actions are payloads of information that send data from your application to your store. You send them to the store using.store.dispatch()
+
+Reducers
+Actions describe the fact that something happened but don’t specify how the application’s state changes in response. That is the job of reducers
+
+Following are the things you should never do inside a reducer:
+
+Mutate reducer’s arguments;
+Perform side effects like database calls, API calls, and routing transitions;
+Call non-pure functions, e.g., Date.now() or Math.random()
+Store
+
+A store is an object that brings them together. A store has the following responsibilities:
+
+Holds application state;
+Allows access to state via getState();
+Allows state to be updated via dispatch(action);
+Registers listeners via subscribe(listener);
+It handles unregistering of listeners via the function returned by subscribe(listener)
+ 
+ ================
+ import React from 'react';
+import ReactDOM from 'react-dom';
+import NewPost from './components/NewPost';
+import CreatePost from './containers/CreatePost';
+import PostList from './containers/PostList';
+import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
+
+class App extends React.Component {
+  render() {
+    return (
+      <div className="container">
+        <div className="row">
+          <div className="col-md-6">
+          <CreatePost />
+          </div>
+          <div className="col-md-6">
+            <PostList />
+          </div>
+        </div>
+      </div>
+    );
+  }
+}
+
+export default App;
+==============================
+index.js
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { createStore } from 'redux';
+import { Provider } from 'react-redux';
+
+import combineReducers from './reducers';
+
+const store = createStore(combineReducers);
+
+ReactDOM.render( 
+
+  <Provider store={store}>
+      <App />
+  </Provider>,
+  document.getElementById('sachin')
+);
+=====================
+Actions:
+// index.js
+import uuidv4 from 'uuid/v4';
+import { ADD_POST, DELETE_POST } from './types';
+
+export const createPost = ({ title, body }) => ({
+  type: ADD_POST,
+  payload: {
+    id: uuidv4(),
+    title,
+    body
+  }
+});
+
+export const deletePost = id => ({
+  type: DELETE_POST,
+  payload: {
+    id
+  }
+});
+
+//types.js
+export const ADD_POST = 'ADD_POST';
+export const DELETE_POST = 'DELETE_POST';
+
+=====================
+//components
+//NewPost.js
+import React from 'react';
+
+class NewPost extends React.Component {
+  state = {
+    title: '',
+    body: ''
+  };
+
+  handleInputChange = e => {
+    this.setState({
+      [e.target.name]: e.target.value
+    });
+  };
+
+  handleSubmit = e => {
+    e.preventDefault();
+    if (this.state.title.trim() && this.state.body.trim()) {
+      console.log(this.state);
+      this.props.onAddPost(this.state);
+      this.handleReset();
+    }
+  };
+
+  handleReset = () => {
+    this.setState({
+      title: '',
+      body: ''
+    });
+  };
+
+  render() {
+    return (
+      <div>
+          <form onSubmit={ this.handleSubmit }>
+          <div className="form-group">
+              <input
+              type="text"
+              placeholder="Title"
+              className="form-control"
+              name="title"
+              onChange={ this.handleInputChange }
+              value={ this.state.title }
+            />
+          </div>
+          <div className="form-group">
+            <textarea
+              cols="19"
+              rows="8"
+              placeholder="Body"
+              className="form-control"
+              name="body"
+              onChange={ this.handleInputChange }
+              value={ this.state.body }>
+            </textarea>
+          </div>
+          <div className="form-group">
+            <button type="submit" className="btn btn-primary">Add Post</button>
+            <button type="button" className="btn btn-warning" onClick={ this.handleReset }>
+              Reset
+            </button>
+          </div>
+        </form>
+      </div>
+    );
+  }
+}
+
+export default NewPost;
+
+//Post.js
+import React from 'react';
+
+const styles = {
+  borderBottom: '2px solid #eee',
+  background: '#fafafa',
+  margin: '.75rem auto',
+  padding: '.6rem 1rem',
+  maxWidth: '500px',
+  borderRadius: '7px'
+};
+
+export default ({ post: { title, body, id }, onDelete }) => {
+  return (
+    <div style={ styles }>
+      <h2>{ title }</h2>
+      <p>{ body }</p>
+      <button className="btn btn-danger" type="button" onClick={() => onDelete(id)}>
+        Remove
+      </button>
+    </div>
+  );
+};
+
+===================
+//Containers
+//Createpost.js
+import { connect } from 'react-redux';
+import { createPost } from '../actions';
+import NewPost from '../components/NewPost';
+
+const mapDispatchToProps = dispatch => {
+  return {
+    onAddPost: post => {
+      dispatch(createPost(post));
+    }
+  };
+};
+
+export default connect(
+  null,
+  mapDispatchToProps
+)(NewPost);
+
+
+//Postlist.js
+import React from 'react';
+import { connect } from 'react-redux';
+import Post from '../components/Post';
+import { deletePost } from '../actions';
+
+function PostList({ posts, onDelete }) {
+  return (
+    <div>
+      {posts.map(post => {
+        return (
+          <Post post={ post } onDelete={ onDelete } key={ post.id } />
+        );
+      })}
+    </div>
+  );
+}
+
+const mapStateToProps = state => {
+  return {
+    posts: state.posts
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    onDelete: id => {
+      dispatch(deletePost(id));
+    }
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(PostList);
+
+=========================
+//Reducers
+//PostReducers.js
+import { ADD_POST, DELETE_POST } from '../actions/types';
+
+export default function postReducer(state = [], action) {
+  switch (action.type) {
+    case ADD_POST:
+      return [...state, action.payload];
+    case DELETE_POST:
+      return state.filter(post => post.id !== action.payload.id);
+    default:
+      return state;
+  }
+}
+
+//index.js
+import { combineReducers } from 'redux';
+import posts from './PostReducer';
+
+export default combineReducers({
+    posts: posts
+});

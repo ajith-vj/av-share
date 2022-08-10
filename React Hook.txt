@@ -1,0 +1,178 @@
+https://reactjs.org/docs/hooks-reference.html
+https://reactjs.org/docs/hooks-overview.html
+https://reactjs.org/docs/hooks-intro.html
+
+Hooks are the new feature introduced in the React 16.8 version. It allows you to use state and other React features without writing a class. Hooks are the functions which "hook into" React state and lifecycle features from function components. It does not work inside classes.
+
+Hooks are functions that let you “hook into” React state and lifecycle features from function components. Hooks don't work inside classes — they let you use React without classes. 
+
+Rules of Hooks
+Hooks are similar to JavaScript functions, but you need to follow these two rules when using them. Hooks rule ensures that all the stateful logic in a component is visible in its source code. These rules are:
+1. Only call Hooks at the top level
+Do not call Hooks inside loops, conditions, or nested functions. Hooks should always be used at the top level of the React functions. This rule ensures that Hooks are called in the same order each time a components renders.
+2. Only call Hooks from React functions
+You cannot call Hooks from regular JavaScript functions. Instead, you can call Hooks from React function components. Hooks can also be called from custom Hooks.
+
+Pros:
+Better alternative to the common design patterns.
+Easy to test and maintain (functional components).
+Create re-usable, isolated components to avoid redundant logic.
+Easy to use and write and co-locate.
+Cons:
+Have to respect its rules, without a linter plugin, it is difficult to know which rule has been broken.
+Need a considerable time practicing to use properly (Exp: useEffect).
+Be aware of the wrong use (Exp: useCallback, useMemo). 
+
+Rules:
+Don't call Hooks inside loops, conditions, or nested functions. Instead, always use Hooks at the top level of your React function. By following this rule, you ensure that Hooks are called in the same order each time a component renders.
+
+npm install react@16.8.0-alpha.1 --save  
+npm install react-dom@16.8.0-alpha.1 --save  
+
+	Basic Hooks
+		useState
+		useEffect
+		useContext
+     Additional Hooks
+		useReducer
+		useCallback
+		useMemo
+		useRef
+		useImperativeHandle
+		useLayoutEffect
+		useDebugValue
+
+import React , { useState, useEffect }from "react";
+ export default function Hookex1() {  
+      const [count, setCount] = useState(0);  
+      const incrementCount = () => setCount(count + 1);  
+      //useDocumentTitle(`You clicked ${count} times`);  
+      // useEffect(() => {  
+      //   document.title = `You clicked ${count} times`  
+      // });  
+    return (
+        <div>
+            <button onClick={incrementCount}>{count}  </button>
+        </div>
+    );
+}
+
+Ex2:
+export default function Hookex1() {
+    const [count, setCount] = useState(0);
+  
+    // Similar to componentDidMount and componentDidUpdate:
+    useEffect(() => {
+      // Update the document title using the browser API
+      document.title = `You clicked ${count} times`;
+    });
+  
+    return (
+      <div>
+        <p>You clicked {count} times</p>
+        <button onClick={() => setCount(count + 1)}>
+          Click me
+        </button>
+      </div>
+    );
+  }
+Hooks are the new feature introduced in the React 16.8 version. It allows you to use state and other React features without writing a class. Hooks are the functions which "hook into" React state and lifecycle features from function components. It does not work inside classes.
+
+Rules of Hooks:
+Hooks are similar to JavaScript functions, but you need to follow these two rules when using them. Hooks rule ensures that all the stateful logic in a component is visible in its source code. These rules are:
+
+1.Only call Hooks at the top level
+2. Only call Hooks from React functions
+
+Hooks State
+Hook state is the new way of declaring a state in React app. Hook uses useState() functional component for setting and retrieving state
+
+Hooks Effect
+The Effect Hook allows us to perform side effects (an action) in the function components. It does not use components lifecycle methods which are available in class components. In other words, Effects Hooks are equivalent to componentDidMount(), componentDidUpdate(), and componentWillUnmount() lifecycle methods.
+
+n React component, there are two types of side effects:
+
+1.Effects Without Cleanup
+2.Effects With Cleanup
+
+Effects without Cleanup
+It is used in useEffect which does not block the browser from updating the screen. It makes the app more responsive. The most common example of effects which don't require a cleanup are manual DOM mutations, Network requests, Logging, etc.
+
+Effects with Cleanup
+Some effects require cleanup after DOM updation. For example, if we want to set up a subscription to some external data source, it is important to clean up memory so that we don't introduce a memory leak. React performs the cleanup of memory when the component unmounts. However, as we know that, effects run for every render method and not just once. Therefore, React also cleans up effects from the previous render before running the effects next time.
+
+Custom Hooks
+A custom Hook is a JavaScript function. The name of custom Hook starts with "use" which can call other Hooks. A custom Hook is just like a regular function, and the word "use" in the beginning tells that this function follows the rules of Hooks. Building custom Hooks allows you to extract component logic into reusable functions.
+
+Side effects have common features which the most web applications need to perform, such as:
+
+Updating the DOM,
+Fetching and consuming data from a server API,
+Setting up a subscription, etc.
+
+import React, { useState, useEffect } from 'react';  
+  
+function CounterExample() {  
+  const [count, setCount] = useState(0);  
+  
+  // Similar to componentDidMount and componentDidUpdate:  
+  useEffect(() => {  
+    // Update the document title using the browser API  
+    document.title = `You clicked ${count} times`;  
+  });  
+  
+  return (  
+    <div>  
+      <p>You clicked {count} times</p>  
+      <button onClick={() => setCount(count + 1)}>  
+        Click me  
+      </button>  
+    </div>  
+  );  
+}  
+export default CounterExample;
+
+==============
+import React, { useState, useEffect } from 'react';  
+  
+const useDocumentTitle = title => {  
+  useEffect(() => {  
+    document.title = title;  
+  }, [title])  
+}  
+  
+function CustomCounter() {  
+  const [count, setCount] = useState(0);  
+  const incrementCount = () => setCount(count + 1);  
+  useDocumentTitle(`You clicked ${count} times`);  
+  // useEffect(() => {  
+  //   document.title = `You clicked ${count} times`  
+  // });  
+  
+  return (  
+    <div>  
+      <p>You clicked {count} times</p>  
+      <button onClick={incrementCount}>Click me</button>  
+    </div>  
+  )  
+}  
+export default CustomCounter;  
+
+====================
+
+React component lifecycle with hooks
+You can take advantage of the useEffect hook to achieve the same results as with the componentDidMount, componentDidUpdate and componentWillUnmount methods. useEffect accepts two parameters. The first one is a callback which runs after render, much like in componentDidMount. The second parameter is the effect dependency array. If you want to run it on mount and unmount only, pass an empty array [].
+
+To clean up, return the callback in useEffect:
+
+useEffect(
+  () => {
+    document.addEventListener(“click”, someFunc);
+    
+    return () => {
+      document.removeEventListener(“click”, someFunc);
+    };
+  },
+  []
+);
+

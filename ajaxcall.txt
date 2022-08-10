@@ -1,0 +1,264 @@
+REST stands for “Representational State Transfer”. It consists of various rules that developers follow when creating APIs.
+
+THE BENEFITS OF REST APIS
+Very easy to learn and understand;
+It provides developers with the ability to organize complicated applications into simple resources;
+It easy for external clients to build on your REST API without any complications;
+It is very easy to scale;
+A REST API is not language or platform-specific, but can be consumed with any language or run on any platform.
+===============================
+
+What is redux-saga?
+An alternative side effect model for Redux apps
+
+index.js
+import React from 'react';
+import createSagaMiddleware from 'redux-saga';
+import ReactDOM from 'react-dom';
+import {applyMiddleware, createStore} from 'redux';
+import {connect,Provider} from 'react-redux';
+import { put, takeLatest, call,all } from 'redux-saga/effects';
+
+// GitHub API
+const gitHubApi = (username) => {
+  return fetch(`https://api.github.com/users/${username}`)
+      .then(response => {console.log(response)
+      return response.json()
+        .then(({ login, avatar_url, html_url,name,company }) =>  ({ login, avatar_url, html_url,name,company }));
+    })
+    .catch(error => {
+      throw error;
+    })
+};
+
+// Action
+const getUserDetails = (payload) => {
+  return {
+    type: 'LOAD_USER_REQUEST',
+    payload
+  }
+}
+
+// Reducer
+const userReducer = (state = {}, action) => {
+  switch (action.type) {
+    case 'LOAD_USER_SUCCESS':
+      return action.user;
+    default:
+      return state;
+  }
+};
+
+// Sagas
+function* loadUserDetails({ payload }) {
+  try {
+    const user = yield call(gitHubApi, payload);
+    yield put({type: 'LOAD_USER_SUCCESS', user,});
+  } catch (error) {
+    throw error;
+  }
+}
+
+// Watches for LOAD_USER_REQUEST action and call loadUserDetails with supplied arguments
+function* watchRequest() {
+  yield takeLatest('LOAD_USER_REQUEST', loadUserDetails);
+}
+
+export default function* rootSaga() {
+yield all([
+  watchRequest(),
+]);
+}
+
+class UserProfile extends React.Component {
+  constructor() {
+    super();
+    this.handleUserDetail = this.handleUserDetail.bind(this);
+  }
+
+  componentDidMount() {
+    this.props.getUserDetails('srinivasI');
+  }
+
+  handleUserDetail(event) {
+      event.preventDefault();
+    if (this.username !== null) {
+      console.log("My Input value =",this.username.value)
+      this.props.getUserDetails(this.username.value);
+      this.username.value = '';
+    }
+  }
+
+  render() {
+    const { user } = this.props;
+      return (
+        <div>
+          { user ? <div>
+            <input
+              type="text"
+              ref={(ref) => this.username = ref}
+            />
+            <button onClick={this.handleUserDetail}>Search</button>
+            <div>
+              <h1> User Profile </h1>
+              <h3>Name:{user.name}</h3>
+              <h4>Company:{user.company}</h4>
+              <img src={user.avatar_url} alt="Noimage"/>
+              <p><a href={user.html_url} target="_blank" rel="no relation">{user.login}</a></p>
+            </div>
+          </div> : '...loading'}
+        </div>
+      )
+    }
+}
+// Setup store
+const sagaMiddleware = createSagaMiddleware();
+const store = createStore(userReducer, applyMiddleware(sagaMiddleware));
+sagaMiddleware.run(watchRequest);
+
+const mapStateToProps = (state) => ({ user: state }); // Map the store's state to component's props
+
+const mapDispatchToProps = (dispatch) => ({ getUserDetails: (username) => dispatch(getUserDetails(username)) })  // wrap action creator with dispatch method
+const UserProfilePage = connect(mapStateToProps, mapDispatchToProps)(UserProfile);
+
+const element = document.getElementById('aspire');
+ReactDOM.render(
+  <Provider store={store}>
+    <UserProfilePage />
+  </Provider>,
+  element
+);
+=========================
+What is axios?
+It is a Javascript library used to make http requests from node.js or XMLHttpRequests from the browser and it supports the Promise API that is native to JS ES6.
+
+Axios Features
+Make XMLHttpRequests from the browser
+Make http requests from node.js
+Supports the Promise API
+Intercept request and response
+Transform request and response data
+Cancel requests
+Automatic transforms for JSON data
+Client side support for protecting against XSRF
+
+
+axios.request(config)
+axios.get(url[, config])
+axios.delete(url[, config])
+axios.head(url[, config])
+axios.options(url[, config])
+axios.post(url[, data[, config]])
+axios.put(url[, data[, config]])
+axios.patch(url[, data[, config]])
+
+
+import React from 'react';
+import ReactDOM from 'react-dom';
+import axios from 'axios';
+
+class FetchDemo extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      posts: [],
+      loading: true,
+      error: null
+    };
+  }
+
+  componentDidMount() {
+    // Remove the 'www.' to cause a CORS error (and see the error state)
+    axios.get(`http://www.reddit.com/r/${this.props.subreddit}.json`)
+      .then(res => {
+        // Transform the raw data by extracting the nested posts
+        const posts = res.data.data.children.map(obj => obj.data);
+
+        // Update state to trigger a re-render.
+        // Clear any errors, and turn off the loading indiciator.
+        this.setState({
+          posts,
+          loading: false,
+          error: null
+        });
+      })
+      .catch(err => {
+        // Something went wrong. Save the error in state and re-render.
+        this.setState({
+          loading: false,
+          error: err
+        });
+      });
+  }
+
+  renderLoading() {
+    return <div>Loading...</div>;
+  }
+
+  renderError() {
+    return (
+      <div>
+        Uh oh: {this.state.error.message}
+      </div>
+    );
+  }
+
+  renderPosts() {
+    if(this.state.error) {
+      return this.renderError();
+    }
+
+    return (
+      <ul>
+        {this.state.posts.map(post =>
+          <li key={post.id}>{post.title}</li>
+        )}
+      </ul>
+    );
+  }
+
+  render() {
+    return (
+      <div>
+        <h1>{`/r/${this.props.subreddit}`}</h1>
+        {this.state.loading ?
+          this.renderLoading()
+          : this.renderPosts()}
+      </div>
+    );
+  }
+}
+
+// Change the subreddit to anything you like
+ReactDOM.render(
+  <FetchDemo subreddit="reactjs"/>,
+  document.getElementById('aspire')
+);
+
+axios vs redux-saga: What are the differences?
+
+axios: Promise based HTTP client for the browser and node.js. It is a Javascript library used to make http requests from node.js or XMLHttpRequests from the browser and it supports the Promise API that is native to JS ES6; redux-saga: An alternative side effect model for Redux apps. An alternative side effect model for Redux apps.
+
+axios can be classified as a tool in the "Javascript Utilities & Libraries" category, while redux-saga is grouped under "State Management Library".
+
+axios and redux-saga are both open source tools. It seems that axios with 61.8K GitHub stars and 5.03K forks on GitHub has more adoption than redux-saga with 18.3K GitHub stars and 1.58K GitHub forks.
+
+AppsFlyer, Kapten, and Volta Industries are some of the popular companies that use redux-saga, whereas axios is used by AgFlow, Jobsrepublic, and B2Beer. redux-saga has a broader approval, being mentioned in 43 company stacks & 21 developers stacks; compared to axios, which is listed in 9 company stacks and 3 developer stacks.
+
+redux-thunk and redux-promise
+One of the most important things to remember is that every third-party library has its learning curve and potential scalability issues.
+
+Of all the community libraries for managing side effects in Redux, those that work like redux-thunk and redux-promise are the easiest to get started with.
+
+For redux-thunk, you write an action creator that doesn’t “create” an object but returns a function. This function gets passed the getState and dispatch functions from Redux.
+
+import { createStore, applyMiddleware } from "redux";
+import thunk from "redux-thunk";
+const store = createStore(rootReducer, applyMiddleware(thunk));
+
+The first line in the code block above imports the createStore and applyMiddleware functions from redux.
+
+Line 2 imports the thunk from redux-thunk.
+
+Line 3 creates the store but with an applied middleware.

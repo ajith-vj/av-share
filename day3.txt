@@ -1,0 +1,78 @@
+Webpack is a module bundler (manages and loads independent modules). 
+It takes dependent modules and compiles them to a single (file) bundle.
+You can use this bundle while developing apps using command line or, by configuring it using webpack.config file.
+
+Babel is a JavaScript compiler and transpiler. It is used to convert one source code to other. Using this you will be able to use the new ES6 features in your code where, babel converts it into plain old ES5 which can be run on all browsers.
+
+
+1. Install create-react-app
+		npx create-react-app my-app
+2.Go inside to project and then Run the project
+		npm start
+
+
+
+node_modules: It contains the React library and any other third party libraries needed.
+public: It holds the public assets of the application. It contains the index.html where React will mount the application by default on the <div id="root"></div> element.
+src: It contains the App.css, App.js, App.test.js, index.css, index.js, and serviceWorker.js files. Here, the App.js file always responsible for displaying the output screen in React.
+package-lock.json: It is generated automatically for any operations where npm package modifies either the node_modules tree or package.json. It cannot be published. It will be ignored if it finds any other place rather than the top-level package.
+package.json: It holds various metadata required for the project. It gives information to npm, which allows to identify the project as well as handle the project?s dependencies.
+README.md: It provides the documentation to read about React topics.
+
+manifest.json:
+The web app manifest provides information about an application (such as name, author, icon, and description) in a JSON text file. The purpose of the manifest is to install web applications to the homescreen of a device, providing users with quicker access and a richer experience.
+
+StrictMode:
+React's StrictMode is sort of a helper component that will help you write better react components, you can wrap a set of components with <StrictMode /> and it'll basically:
+
+Verify that the components inside are following some of the recommended practices and warn you if not in the console.
+Verify the deprecated methods are not being used, and if they're used strict mode will warn you in the console.
+Help you prevent some side effects by identifying potential risks.
+As the documentation says, strict mode is development oriented so you don't need to worry about it impacting on your production build.
+
+The ReactDOM.render() function takes two arguments, HTML code and an HTML element.
+The purpose of the function is to display the specified HTML code inside the specified HTML element.
+Note:
+Strict mode checks are run in development mode only; they do not impact the production build.
+
+
+serviceWorker:
+A service worker is a background worker that acts as a programmable proxy, allowing us to control what happens on a request-by-request basis. We can use it to make (parts of, or even entire) React apps work offline. You're in control of how much of your UX is available offline.
+
+A service worker is a type of web worker. It's essentially a JavaScript file that runs separately from the main browser thread, intercepting network requests, caching or retrieving resources from the cache, and delivering push messages.
+
+By default, the React build process will generate a serviceWorker. js file in your src folder. However, the default for the service worker is unregistered, meaning that it won't yet be able to take control of your web app.  unregister() to serviceWorker. register() will allow you to opt in to using the service worker
+Example
+Display a paragraph inside the "root" element:
+ReactDOM.render(<p>Hello</p>, document.getElementById('root'));
+The result is displayed in the <div id="root"> element:
+<body>
+<div id="root"></div>
+</body>
+
+JSX follows XML rules, and therefore HTML elements must be properly closed.
+Example
+Close empty elements with />
+const myelement = <input type="text" />;
+
+With JSX you can write expressions inside curly braces {45*15}.
+The expression can be a React variable, or property, or any other valid JavaScript expression.
+const myelement = <h1>React is {5 + 5} times better with JSX</h1>;
+Wrap two headers inside one DIV element:
+const myelement = (
+<div>
+<h1>I am a Header.</h1>
+<h1>I am a Header too.</h1>
+</div>
+);
+
+
+Linux (tested on Ubuntu 14.04/16.04) and MacOS:
+
+"start": "PORT=3006 react-scripts start"
+or (may be) more general solution 
+
+"start": "export PORT=3006 react-scripts start"
+Windows 
+
+"start": "set PORT=3006 && react-scripts start"

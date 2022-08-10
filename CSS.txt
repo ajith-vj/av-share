@@ -1,0 +1,459 @@
+https://reactjs.org/docs/faq-styling.html
+CSS
+	inline --><h2 style="color:red">Some text</h2>
+	embeded --> <style>	</style>
+	external --> <link>
+	
+1.Inline CSS
+2.Normal CSS
+3.CSS in JS
+	Dependencies: jss, jss-preset-default, jss-cli
+4.Styled Components
+	Dependencies: styled-components
+	npm install --save styled-components
+	https://styled-components.com/docs/basics
+	https://styled-components.com/docs/basics#animations  
+5.CSS Modules
+	Dependencies: css-loader
+6.Sass & SCSS
+	Dependencies: node-sass
+	
+	$primary-color: #333;
+	body {
+	   color: $primary-color;
+	}
+
+7.Less
+	Dependencies: less, less-loader
+	
+	@pale-green-color: #4D926F;
+	#header {
+	  color: @pale-green-color;
+	}
+	h2 {
+	  color: @pale-green-color;
+	}
+
+8.Stylable
+https://stylable.io/
+	Dependencies: @stylable/core, @stylable/runtime, @stylable/optimizer, @stylable/module-utils, @stylable/custom-value
+
+
+	@namespace "Page";
+	:import {
+		-st-from: './video-player.st.css';
+		-st-default: VideoPlayer;
+	}
+	.mainVideo {
+		-st-extends: VideoPlayer; /* define mainVideo as VideoPlayer */
+	}
+	.mainVideo::playButton { /* override mainVideo playButton */
+		background: green;
+		color: purple;
+	}
+
+	====
+	/* CSS output*/
+	.Page__mainVideo.VideoPlayer__root {}
+	.Page__mainVideo.VideoPlayer__root .VideoPlayer__playButton {
+		background: green;
+		color: purple;
+	}
+
+	https://stylable.io/docs/get-started
+	
+	=================
+	import React from 'react';
+import ReactDOM from 'react-dom';
+import './index.css';
+import App from './App';
+import First from './First';
+import Second from './Second';
+import Headline from './Headline';
+import Test from './Test';
+import Four from './Four';
+import ParentComponent from './ParentComponet';
+import Stateex from './Stateex';
+import Stateex2 from './Stateex2';
+import Formex from './Formex';
+import Eventex from './Eventex';
+import Lifeex from './Lifeex';
+import Header from './Header';
+import Myheader from './Myheader';
+import CssModule from './CssModule'; 
+import * as serviceWorker from './serviceWorker';
+const mystyle={
+  color:"blue",
+  border:"4px solid blue",
+  padding:"20px"
+}
+
+ReactDOM.render(
+  <React.StrictMode>
+    <div  style={{color:'red',margin:10, border:'2px solid green',padding:20}}>
+   {/* <Header favcol="yellow"/> */}
+  {/*  <CssModule/>
+   <Myheader/> */}
+
+   <div style={{width:400,border:'1px solid green',float:'left'}}>
+   <First/>
+   </div>
+   <div style={{width:400,border:'1px solid red',float:'left'}}>
+   <Lifeex />
+   <h1>Hello How are you</h1>
+   </div>
+    {/* <Eventex /> */}
+   {/*  <Formex/>
+    <h4 >Welcome to Aspire </h4>
+    <Stateex2 style={mystyle}/>
+    <Test/>
+    <App />
+    <Stateex/>
+    <ParentComponent/>
+    <Four mysalary="50000"/>
+    
+    <Second myname="SrinivasI"/>
+    <Headline/>
+    <First/> 
+    {45343490+344390} */}
+    </div>
+  </React.StrictMode>,
+  document.getElementById('root')
+);
+
+// If you want your app to work offline and load faster, you can change
+// unregister() to register() below. Note this comes with some pitfalls.
+// Learn more about service workers: https://bit.ly/CRA-PWA
+serviceWorker.unregister();
+======================
+.First{
+    background-color:green;
+    color:#fff;
+    margin:20px;
+    padding:40px;
+}
+h4{
+    border:4px solid red;
+}
+
+import React from 'react';
+import './First.css';
+ import Greeting from './Greeting';
+
+ function First(){
+     
+     return (
+         <div >
+         <div> Hello My First Component</div>
+         <Greeting></Greeting>
+         <Greeting />
+         <h4>My first compnen tcontent</h4>
+     <h3> Welcome to functional Components { 5*5} </h3>
+         </div>
+     );
+ }
+
+ export default First;
+ ==================
+ import React from 'react';
+import './First.css';
+class Greeting extends React.Component {
+    render(){
+    return <h1 className="First">Hello {this.props.name} Salary:{this.props.salary}</h1>;
+    }
+  }
+  Greeting.defaultProps = {
+    name: "User",
+    salary:60000
+  };
+  export default Greeting;
+  ==================
+  .App {
+  text-align: center;
+  border:4px solid red;
+  color:red;
+}
+.br1{
+  border:4px dashed green;
+  color:blue
+}
+.mcl{
+  margin:40px;
+}
+.cl1{
+  color:red;
+}
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+.myheading{
+  color:red;
+  border:5px dashed green;
+  padding:10px;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+==============
+import React, {Component} from 'react';
+import logo from './logo.svg';
+import './App.css';
+import First from './First';
+import Header from './Header';
+import styled, { css } from "styled-components";
+class App extends Component{
+
+
+render(){
+  const Button = styled.button`
+  display: inline-block;
+  color: palevioletred;
+  font-size: 1em;
+  margin: 1em;
+  padding: 0.25em 1em;
+  border: 2px solid palevioletred;
+  border-radius: 3px;
+  display: block;
+`;
+
+const ReversedButton = props => <Button {...props} children={props.children.split('').reverse()} />
+
+return (
+  <div>
+    <Button>Normal Button </Button>
+    <Button as={ReversedButton}>Custom Button with Normal Button styles</Button>
+  
+  </div>
+)
+}
+}
+
+export default App;
+===========================
+import React from 'react';
+import ReactDOM from 'react-dom';
+import styles from './Testmod.module.css'; 
+
+class Mycssmod extends React.Component {
+  render() {
+    return <h1 className={styles.heading1}>Hello Css module content</h1>;
+  }
+}
+
+export default Mycssmod;
+====================
+.heading1{
+    color:blue;
+    font-size:50px;
+}
+===================
+import React, {Component} from 'react';
+import ReactDOM from 'react-dom';
+import './Cssmodule.scss';
+class CssModule extends React.Component {
+  render() {
+    return (
+      <div>
+      <h1>Hello Style!</h1>
+      <p>Add a little style!.</p>
+      <h3>Srinivas Ippili</h3>
+      </div>
+    );
+   
+}
+}
+
+export default CssModule;
+========================
+$scolor:green;
+h1{
+    font-size:40px;
+    color:#fff;
+    background-color:$scolor;
+}
+p{
+    color:$scolor;
+}
+div{
+    color:$scolor;
+    border:5px solid $scolor;
+}
+h3{
+    color:#fff;
+    background-color:$scolor;
+    
+}
+====================
+
+import React, {Component} from 'react';
+
+import './Scssex.scss';
+class Scssex extends React.Component {
+  render() {
+    return (
+      <div>
+      <h1>Hello Style!</h1>
+      <p>Add a little style!.</p>
+      <h3>Srinivas Ippili</h3>
+      </div>
+    );
+   
+}
+}
+
+export default Scssex;
+
+====================
+Use backgroundColor instead of background-color:
+<h1 style={{backgroundColor: "lightblue"}}>Hello Style!</h1>
+
+
+<h1 style={{color: "red"}}>Hello Style!</h1>
+
+JavaScript Object
+render() {
+    const mystyle = {
+      color: "white",
+      backgroundColor: "DodgerBlue",
+      padding: "10px",
+      fontFamily: "Arial"
+    };
+    return (
+      <div>
+      <h1 style={mystyle}>Hello Style!</h1>
+      <p>Add a little style!</p>
+      </div>
+    );
+  }
+========================
+Aphrodite
+One more CSS in JS library with 4,7K+ users is on GitHub. According to Aphrodite developers, it is one of the best-suited library for React JS. It supports the pseudo code as well as the media queries, that are necessary in responsive design. It adds CSS at the time of rendering components inside DOM according to developers.
+How to install Aphrodite?
+npm install --save aphrodite
+
+This way is similar to styled-components and inline style.
+
+import React from 'react';
+import { StyleSheet, css } from 'aphrodite';
+
+const styles = StyleSheet.create({
+  wrapper: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '100%',
+    padding: '50px',
+    color: '#444',
+    border: '1px solid #1890ff',
+  },
+  title: {
+    color: '#0d1a26',
+    fontWeight: 400,
+  },
+  button: {
+    padding: '10px 20px',
+    border: 'none',
+    borderRadius: '4px',
+    background: '#1890ff',
+    color: '#fff',
+    fontSize: '14px',
+    cursor: 'pointer',
+    transition: '.3s background',
+    ':hover': {
+      background: '#40a9ff'
+    }
+  }
+});
+
+const ExampleAphrodite = () => (
+  <div className={css(styles.wrapper)}>
+    <h1 className={css(styles.title)}>Example Aphrodite</h1>
+    <button className={css(styles.button)}>Button</button>
+  </div>
+);
+
+export default ExampleAphrodite;
+=======================================
+Radium
+This CSS-in-JS library focuses on inline styling and dead code elimination which would be useful. Radium is a very popular library with more than 6.9K users on GitHub.
+It has supports for:
+Inline styles
+Pseudo Selector hover, active, focus, ...
+Media queries
+vendor prefixing
+Animation
+ES6 class
+createClass
+It is a short guide how to use it in React Application:
+npm install -s radium
+
+import React from 'react';
+import Radium from 'radium';
+
+function ExampleRadium() {
+  const styles = {
+    wrapper: {
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
+      width: '100%',
+      padding: '50px',
+      color: '#444',
+      border: '1px solid #1890ff',
+    },
+    title: {
+      color: '#0d1a26',
+      fontWeight: 400,
+    },
+    button: {
+      padding: '10px 20px',
+      border: 'none',
+      borderRadius: '4px',
+      background: '#1890ff',
+      color: '#fff',
+      fontSize: '14px',
+      cursor: 'pointer',
+      transition: '.3s background',
+      ':hover': {
+        background: '#40a9ff'
+      }
+    }
+  };
+
+  return (
+    <div style={styles.wrapper}>
+      <h1 style={styles.title}>Example Radium</h1>
+      <button style={styles.button}>Button</button>
+    </div>
+  );
+}
+export default Radium(ExampleRadium);

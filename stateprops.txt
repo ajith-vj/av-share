@@ -1,0 +1,203 @@
+What is state?
+React has another special built-in object called state, which allows components to create and manage their own data. So unlike props, components cannot pass data with state, but they can create and manage it internally.
+ex:
+import React from 'react';
+export default class Stateex1 extends React.Component {
+    constructor() {
+        super();
+        this.state = {
+            id: 1,
+            name: "Srinivas",
+			salary:'80000'
+        };
+    }
+
+    render() {
+        return (
+            <div>
+                <p>{this.state.id}</p>
+                <p>{this.state.name}</p>
+				<p>{this.state.salary}</p>
+            </div>
+        );
+    }
+}
+	
+What are props?
+Props is short for properties and they are used to pass data between React components. React’s data flow between components is uni-directional (from parent to child only).
+ex:
+import React,{Component} from 'react'; 
+class ParentComponent extends Component {    
+    render() {    
+        return (        
+            <ChildComponent name="React Training" location="Hyderabad" />    
+        );  
+    }
+}
+
+const ChildComponent = (props) => {    
+    return <><h3>{props.location}</h3><h3>{props.name}</h3></>; 
+};
+export default ParentComponent;
+
+=======================
+import React from 'react'; 
+class Test extends React.Component {
+    constructor(props) {
+      super(props);
+      this.state = {
+        name: "Srinivas",
+        age: 40,
+        mobile: 8886272515,
+        addr: "Hyderabad"
+      };
+    }
+    render() {
+      return (
+        <div>
+          <h1>My Name is {this.state.name}</h1>
+          <h3>Age:{this.state.age}</h3>
+            <h2>Mobile:{this.state.mobile}</h2>
+            <h3> {this.state.addr}    </h3>
+        </div>
+      );
+    }
+  }
+  export default Test;
+  
+why setState()?
+A change in the state happens based on user-input, triggering an event, and so on. Also, React components (with state) are rendered based on the data in the state. State holds the initial information.
+
+So when state changes, React gets informed and immediately re-renders the DOM – not the whole DOM, but only the component with the updated state. This is one of the reasons why React is fast.
+
+And how does React get notified? You guessed it: with setState( ). The setState( ) method triggers the re-rendering process for the updated parts. React gets informed, knows which part(s) to change, and does it quickly without re-rendering the whole DOM.
+
+What is the difference between state and props?
+props (short for “properties”) and state are both plain JavaScript objects. While both hold information that influences the output of render, they are different in one important way: props get passed to the component (similar to function parameters) whereas state is managed within the component (similar to variables declared within a function).
+
+1.Components receive data from outside with props, whereas they can create and manage their own data with state
+2.Props are used to pass data, whereas state is for managing data
+3.Data from props is read-only, and cannot be modified by a component that is receiving it from outside
+4.State data can be modified by its own component, but is private (cannot be accessed from outside)
+5.Props can only be passed from parent component to child (unidirectional flow)
+Modifying state should happen with the setState ( ) method
+
+import React from 'react';
+
+class App extends React.Component {
+   render() {
+      return (
+         <div>
+            <h3>Array: {this.props.propArray}</h3>
+            <h3>Bool: {this.props.propBool ? "True..." : "False..."}</h3>
+            <h3>Func: {this.props.propFunc(3)}</h3>
+            <h3>Number: {this.props.propNumber}</h3>
+            <h3>String: {this.props.propString}</h3>
+            <h3>Object: {this.props.propObject.objectName1}</h3>
+            <h3>Object: {this.props.propObject.objectName2}</h3>
+            <h3>Object: {this.props.propObject.objectName3}</h3>
+         </div>
+      );
+   }
+}
+
+
+App.defaultProps = {
+   propArray: [1,2,3,4,5],
+   propBool: true,
+   propFunc: function(e){return e},
+   propNumber: 1,
+   propString: "String value...",
+   
+   propObject: {
+      objectName1:"objectValue1",
+      objectName2: "objectValue2",
+      objectName3: "objectValue3"
+   }
+}
+export default App;
+
+================
+import React from 'react';
+class Test extends React.Component {
+  constructor() {
+      super();
+      this.click = this.click.bind(this);
+      // Set initial state (ONLY ALLOWED IN CONSTRUCTOR)
+      this.state = {
+          greeting: 'Hello!'
+      };
+  }
+  click(e) {
+      this.setState({
+            greeting: 'Hello Srinivas Ippili'
+      });
+  }
+  render() {
+      return(
+          <div>
+              <p>{this.state.greeting}</p>
+              <button onClick={this.click}>Click me</button>
+          </div>
+      );
+  }
+  
+}
+export default Test
+
+==================
+import React, {Component} from 'react';
+import './App.css';
+
+const Message = props => <div>{props.msg}</div>;
+
+class App extends Component {
+  render() {
+    return (
+      <div>
+        <Message msg="A Generic Hello World Text" />
+        <Message msg="Creating Reusable React Components" />
+      </div>
+    );
+  }
+}
+export default App;
+
+
+==============
+import React from 'react';
+
+/*  const person = ( props ) => {
+    return (
+        <div>
+            <p>I'm {props.name} and I am {props.age} years old!</p>
+            <p>{props.children}</p>
+        </div>
+    )
+};  */
+ const person = ( props ) => {
+    return (
+        <div>
+            <p onClick={props.click}>I'm {props.name} and I am {props.age} years old!</p>
+            <p>{props.children}</p>
+            <input type="text" onChange={props.changed} value={props.name} />
+        </div>
+    )
+}; 
+
+export default person;
+======================
+
+The main difference between state and props is that props are immutable. This is why the container component should define the state that can be updated and changed, while the child components should only pass data from the state using props.
+
+import React from 'react'; 
+class App extends React.Component { render() { 
+return ( <div> <h1>{this.props.headerProp}</h1> <h2>{this.props.contentProp}</h2> </div> ); }
+ } 
+export default App;
+
+import React from 'react'; 
+import ReactDOM from 'react-dom'; 
+import App from './App.jsx'; 
+ReactDOM.render(<App headerProp = “My Header props..." contentProp = “My Content props..."/>, document.getElementById('app')); 
+export default App;

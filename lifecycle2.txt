@@ -1,0 +1,250 @@
+https://projects.wojtekmaj.pl/react-lifecycle-methods-diagram/
+https://reactjs.org/docs/react-component.html
+https://reactjs.org/docs/react-component.html#constructor
+Mounting – Birth of your component
+Update – Growth of your component
+Unmount – Death of your component
+
+Initialization: This is the stage where the component is constructed with the given Props and default state. This is done in the constructor of a Component Class.
+
+class Clock extends React.Component { 
+	constructor(props) 
+	{ 
+		// Calling the constructor of 
+		// Parent Class React.Component 
+		super(props); 
+		
+		// Setting the initial state 
+		this.state = { date : new Date() }; 
+	} 
+} 
+
+Mounting: Mounting is the stage of rendering the JSX returned by the render method itself.
+Updating: Updating is the stage when the state of a component is updated and the application is repainted.
+Unmounting: As the name suggests Unmounting is the final step of the component lifecycle where the component is removed from the page.
+
+Mounting
+These methods are called in the following order when an instance of a component is being created and inserted into the DOM:
+
+constructor()
+static getDerivedStateFromProps()
+render() --Html --will be send to dom
+componentDidMount()
+UNSAFE_componentWillMount()
+
+Updating
+An update can be caused by changes to props or state. These methods are called in the following order when a component is being re-rendered:
+
+static getDerivedStateFromProps()
+shouldComponentUpdate()
+render()
+getSnapshotBeforeUpdate()
+componentDidUpdate()
+UNSAFE_componentWillUpdate()
+UNSAFE_componentWillReceiveProps()
+
+Unmounting
+This method is called when a component is being removed from the DOM:
+
+componentWillUnmount()
+
+=============
+
+componentDidMount() is called as soon as the component is mounted and ready. This is a good place to initiate API calls, if you need to load data from a remote endpoint.
+Unlike the render() method, componentDidMount() allows the use of setState(). Calling the setState() here will update state and cause another rendering but it will happen before the browser updates the UI. This is to ensure that the user will not see any UI updates with the double rendering.
+
+componentDidUpdate() method is updating the DOM in response to prop or state changes.
+You can call setState() in this lifecycle, but keep in mind that you will need to wrap it in a condition to check for state or prop changes from previous state. Incorrect usage of setState() can lead to an infinite loop.
+
+componentDidUpdate(prevProps) {
+ //Typical usage, don't forget to compare the props
+ if (this.props.userName !== prevProps.userName) {
+   this.fetchData(this.props.userName);
+ }
+}
+
+componentWillUnmount()
+As the name suggests this lifecycle method is called just before the component is unmounted and destroyed. If there are any cleanup actions that you would need to do, this would be the right spot.
+
+You cannot modify the component state in componentWillUnmount lifecycle.
+
+componentWillUnmount() {
+ window.removeEventListener('resize', this.resizeListener)
+}
+
+
+shouldComponentUpdate()
+This lifecycle can be handy sometimes when you don’t want React to render your state or prop changes.
+
+The shouldComponentUpdate() method is used to let React know if a component is not affected by the state and prop changes.
+
+shouldComponentUpdate(nextProps, nextState) {
+ return this.props.title !== nextProps.title || 
+  this.state.input !== nextState.input }
+  
+  The two new lifecycle methods are getDerivedStateFromProps() and getSnapshotBeforeUpdate().
+They need to be used only occasionally.
+Not many examples are out there for these two methods and they are still being discussed and will have more references in the future.
+  
+  import React from 'react'; 
+
+class Eventex extends React.Component { 
+	constructor(props) 
+	{ 
+		super(props); 
+		this.state = { hello : "World!" }; 
+	} 
+
+	componentWillMount() 
+	{ 
+		console.log("componentWillMount()"); 
+	} 
+
+	componentDidMount() 
+	{ 
+		console.log("componentDidMount()"); 
+	} 
+
+	changeState() 
+	{ 
+		this.setState({ hello : "Srinivas!" }); 
+	} 
+
+	render() 
+	{ 
+		return ( 
+			<div> 
+			<h1>Welcome to Aspire , Hello{ this.state.hello }</h1> 
+			<h2> 
+			<a onClick={this.changeState.bind(this)}>Press Here!</a> 
+			</h2> 
+			</div>); 
+	} 
+
+	shouldComponentUpdate(nextProps, nextState) 
+	{ 
+		console.log("shouldComponentUpdate()"); 
+		return true; 
+	} 
+
+	componentWillUpdate() 
+	{ 
+		console.log("componentWillUpdate()"); 
+	} 
+
+	componentDidUpdate() 
+	{ 
+		console.log("componentDidUpdate()"); 
+	} 
+} 
+
+export default Eventex;
+=================
+
+RENDER()
+Called Evertime< the state changes it value
+i.e., when the state value is modified by
+
+this.setState({
+counter:
+})
+syntax :
+render: function(){
+return JSX DOM Or null/false
+}
+Neither props nor state should be modified inside this function
+render function has to be pure, meaning that the same result is returned every time the method is invoked
+
+COMPONENTDIDMOUNT()
+Called once, after the render method is called
+This hook has the ability to access the props (this.props) and state (this.state) and the DOM too.
+
+
+SHOULDCOMPONENTUPDATE()
+This is always called before the render method and enables to define if a re-rendering is needed or can be skipped based on the boolean value it returns.
+
+syntax :
+shouldComponentUpdate: function(nextProps, nextState){
+// return a boolean value
+return true;
+}
+ex:
+shouldComponentUpdate(newProps, newState) {
+console.log(newProps, newProps.myNumber <= 10)
+return newProps.myNumber <= 10;
+},
+shouldComponentUpdate()
+This method determines whether the component should be updated or not. By default, it returns true. But at some point, if you want to re-render the component on some condition, then shouldComponentUpdate method is the right place.
+
+Suppose, for example, you want to only re-render your component when there is a change in prop — then utilize the power of this method. It receives arguments like nextProps and nextState which help us decide whether to re-render by doing a comparison with the current prop value.
+
+COMPONENTDIDUPDATE()
+componentWillUpdate gets called as soon as the the shouldComponentUpdate returned true.
+Any state changes via this.setState are not allowed.
+Strictly used to prepare for an upcoming update not trigger an update itself.
+
+syntax :
+componentDidUpdate: function(prevProps, prevState){
+// perform any preparations for an upcoming update
+}
+Ex: Consider, you are using any third party library, lets says MaterialLite or some fancy CSS library for components like checkbox, radio button…
+And at some time, after the component is updated, the material may not be updating (I once said the same “Firt Time it loaded,and god knows why it is not loading second time”), So this is your Hero
+
+Ex: (The below code is from my project)
+componentDidUpdate: function () {
+//Reinitialize after the update
+common.upgradeMaterialComponents.Init();
+}
+
+==================
+
+
+ static getDerivedStateFromProps() {
+//do stuff here
+  } 
+  
+  static getDerivedStateFromProps(props, state) {
+//do stuff here
+  } 
+  
+  class App extends Component {
+  state = {
+    points: 10
+  }
+    
+  // *******
+  //  NB: Not the recommended way to use this method. Just an example. Unconditionally overriding state here is generally considered a bad idea
+  // ********
+  static getDerivedStateFromProps(props, state) {
+    return {
+      points: 1000
+    }
+  }
+  
+  render() {
+    return (
+      <div className="App">
+        <header className="App-header">
+          <img src={logo} className="App-logo" alt="logo" />
+          <p>
+            You've scored {this.state.points} points.
+          </p>
+        </header>
+      </div>
+    );
+  }
+}
+
+===================
+componentWillUnmount()
+The componentWillUnmount lifecycle method is invoked immediately before a component is unmounted and destroyed. This is the ideal place to perform any necessary cleanup such as clearing up timers, cancelling network requests, or cleaning up any subscriptions that were created in componentDidMount() as shown below:
+
+// e.g add event listener
+componentDidMount() {
+    el.addEventListener()
+}
+
+// e.g remove event listener 
+componentWillUnmount() {
+    el.removeEventListener()
+ }

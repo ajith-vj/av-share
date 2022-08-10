@@ -1,0 +1,359 @@
+import React from 'react';
+class Contact extends React.Component {
+    onSubmit = () => {
+        this.props.history.push('/register')
+      }
+      render() {
+        return (
+          <form>
+              <br/><br/>
+            <input placeholder="name" type="name" />
+            <input placeholder="email" type="email" />
+            <button onClick={this.onSubmit}>Submit</button>
+          </form>
+        )
+      }
+}
+export default Contact
+============
+import React from 'react'
+import { Route, Link,NavLink, BrowserRouter as Router,Switch } from 'react-router-dom';
+import Register from './Register';
+import Mytable from './Mytable';
+import Users from './Users';
+import Greeting from './Greeting';
+import Notfound from './Notfound';
+import Contact from './Contact';
+import App from './App';
+import './Router.css';
+
+  const routing = (
+    <Router>
+      <div>
+        <ul>
+          <li>
+            <NavLink exact activeClassName="active" to="/">
+              Home
+            </NavLink>
+          </li>
+          <li>
+            <NavLink activeClassName="active" to="/users">
+              Users
+            </NavLink>
+          </li>
+          <li>
+            <NavLink activeClassName="active" to="/register">
+              Register
+            </NavLink>
+          </li>
+          <li>
+            <NavLink activeClassName="active" to="/mytable">
+              MyTable
+            </NavLink>
+          </li>
+          <li>
+            <NavLink activeClassName="active" to="/greeting">
+              Greeting
+            </NavLink>
+          </li>
+          <li>
+            <NavLink activeClassName="active" to="/contact">
+              Contact
+            </NavLink>
+          </li>
+        </ul>
+        <br />
+        <Switch>
+          <Route exact path="/" component={App} />
+          <Route path="/users" component={Users} />
+          <Route path="/register" component={Register} />
+          <Route path="/mytable" component={Mytable} />
+          <Route path="/greeting" component={Greeting} />
+          <Route path="/contact" component={Contact} />
+          <Route component={Notfound} />
+        </Switch>
+      </div>
+    </Router>
+  )
+
+  export default routing;
+  
+  ===================================
+  Rendering a <Redirect> will navigate to a new location. The new location will override the current location in the history stack, like server-side redirects (HTTP 3xx) do.<Route exact path="/">
+  {loggedIn ? <Redirect to="/dashboard" /> : <PublicHomePage />}
+</Route>
+to: string
+The URL to redirect to. Any valid URL path that path-to-regexp@^1.7.0 understands. All URL parameters that are used in to must be covered by from.<Redirect to="/somewhere/else" />
+to: object
+A location to redirect to. pathname can be any valid URL path that path-to-regexp@^1.7.0 understands.<Redirect
+  to={{
+    pathname: "/login",
+    search: "?utm=your+face",
+    state: { referrer: currentLocation }
+  }}
+/>
+
+
+import { Redirect } from "react-router-dom";
+state = { redirect: null };
+render() {
+  if (this.state.redirect) {
+    return <Redirect to={this.state.redirect} />
+  }
+  return(
+  // Your Code goes here
+  )
+}
+
+
+Whenever you want to redirect to another path, you can simply change the state to re-render the component, thus rendering the <Redirect> component.
+this.setState({ redirect: "/someRoute" });
+
+==============================
+import React, { useContext, createContext, useState } from "react";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link,
+  Redirect,
+  useHistory,
+  useLocation
+} from "react-router-dom";
+
+export default function AuthExample() {
+  return (
+    <ProvideAuth>
+      <Router>
+        <div>
+          <AuthButton />
+
+          <ul>
+            <li>
+              <Link to="/public">Public Page</Link>
+            </li>
+            <li>
+              <Link to="/protected">Protected Page</Link>
+            </li>
+          </ul>
+
+          <Switch>
+            <Route path="/public">
+              <PublicPage />
+            </Route>
+            <Route path="/login">
+              <LoginPage />
+            </Route>
+            <PrivateRoute path="/protected">
+              <ProtectedPage />
+            </PrivateRoute>
+          </Switch>
+        </div>
+      </Router>
+    </ProvideAuth>
+  );
+}
+
+const fakeAuth = {
+  isAuthenticated: false,
+  signin(cb) {
+    fakeAuth.isAuthenticated = true;
+    setTimeout(cb, 100); // fake async
+  },
+  signout(cb) {
+    fakeAuth.isAuthenticated = false;
+    setTimeout(cb, 100);
+  }
+};
+
+/** For more details on
+ * `authContext`, `ProvideAuth`, `useAuth` and `useProvideAuth`
+ * refer to: https://usehooks.com/useAuth/
+ */
+const authContext = createContext();
+
+function ProvideAuth({ children }) {
+  const auth = useProvideAuth();
+  return (
+    <authContext.Provider value={auth}>
+      {children}
+    </authContext.Provider>
+  );
+}
+
+function useAuth() {
+  return useContext(authContext);
+}
+
+function useProvideAuth() {
+  const [user, setUser] = useState(null);
+
+  const signin = cb => {
+    return fakeAuth.signin(() => {
+      setUser("user");
+      cb();
+    });
+  };
+
+  const signout = cb => {
+    return fakeAuth.signout(() => {
+      setUser(null);
+      cb();
+    });
+  };
+
+  return {
+    user,
+    signin,
+    signout
+  };
+}
+
+function AuthButton() {
+  let history = useHistory();
+  let auth = useAuth();
+
+  return auth.user ? (
+    <p>
+      Welcome!{" "}
+      <button
+        onClick={() => {
+          auth.signout(() => history.push("/"));
+        }}
+      >
+        Sign out
+      </button>
+    </p>
+  ) : (
+    <p>You are not logged in.</p>
+  );
+}
+
+// A wrapper for <Route> that redirects to the login
+// screen if you're not yet authenticated.
+function PrivateRoute({ children, ...rest }) {
+  let auth = useAuth();
+  return (
+    <Route
+      {...rest}
+      render={({ location }) =>
+        auth.user ? (
+          children
+        ) : (
+          <Redirect
+            to={{
+              pathname: "/login",
+              state: { from: location }
+            }}
+          />
+        )
+      }
+    />
+  );
+}
+
+function PublicPage() {
+  return <h3>Public</h3>;
+}
+
+function ProtectedPage() {
+  return <h3>Protected</h3>;
+}
+
+function LoginPage() {
+  let history = useHistory();
+  let location = useLocation();
+  let auth = useAuth();
+
+  let { from } = location.state || { from: { pathname: "/" } };
+  let login = () => {
+    auth.signin(() => {
+      history.replace(from);
+    });
+  };
+
+  return (
+    <div>
+      <p>You must log in to view the page at {from.pathname}</p>
+      <button onClick={login}>Log in</button>
+    </div>
+  );
+}
+=====================================
+import React from 'react';
+import { Route, Link,NavLink, BrowserRouter as Router,Switch, Redirect } from 'react-router-dom';
+import First from './First';
+import Formex from './Formex';
+import Formex2 from './Formex2';
+import Greeting from './Greeting';
+export default class Hookex1 extends React.Component {
+  constructor() {
+    super();
+    this.state = {
+      name: "React",
+      isUserAuthenticated: true
+    };
+  }
+
+  render() {
+    return (
+      <div>
+        <Router>
+          <div>
+            <ul>
+              <li>
+                <Link to="/Formex">Formex</Link>
+              </li>
+              <li>
+                <Link to="/Formex2">Formex2</Link>
+              </li>
+              <li>
+                <Link to="/Greeting">Greeting</Link>
+              </li>
+              <li>
+                <Link to="/First">First</Link>
+              </li>
+            </ul>
+            <hr />
+            <Switch>
+              <Route
+                exact
+                path="/"
+                render={() => {
+                    return (
+                      this.state.isUserAuthenticated ?
+                      <Redirect to="/Formex" /> :
+                      <Redirect to="/Formex2" /> 
+                    )
+                }}
+              />
+               <Route exact path="/Formex" component={Formex} />
+              <Route exact path="/Formex2" component={Formex2} />
+              <Route exact path="/Greeting" component={Greeting} />
+              <Route exact path="/First" component={First} />
+            </Switch>
+          </div>
+        </Router>
+      </div>
+    );
+  }
+}
+=====================
+Redirecting is quite an easy one. We can make use of browserHistory's push method to redirect. For example, we can add a button to details page that redirects to list page on click:
+import { browserHistory } from 'react-router';
+
+class CarDetail extends Component {
+    handleRedirect(){
+        browserHistory.push('/cars');
+    }
+    render(){
+        return(
+            // ... preceding codes
+    <div >
+        <button onClick={this.handleRedirect.bind(this)}>Go to Cars</button>
+                    </div>
+     // ... succeeding codes
+        )
+    }
+}
+=================

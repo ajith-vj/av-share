@@ -1,0 +1,31 @@
+User interface bugs — something’s wrong in the user interface, or it just doesn’t look right
+Logic bugs — the application doesn’t behave the way we expect
+Networking bugs — although the logic is correct, a third-party service doesn’t behave as we expect
+Regressions — a feature that worked in the past doesn’t work anymore
+
+https://chrome.google.com/webstore/detail/react-developer-tools/fmkadmapgofadopljbjfkapdkoienihi?hl=en
+
+debugger;
+debugger for chrome extension for Visual Studio code
+console.log(), console.warn(), console.error()
+Source tab --> ctrl+p
+
+npm install react-devtools --save
+
+Performance improvements
+Component filters
+Easily debug unexpected prop values & component elements
+Improved searching
+
+https://reactjs.org/docs/optimizing-performance.html#use-the-production-build
+
+https://github.com/facebook/react-devtools
+
+npm install -g react-devtools@^4
+mozilla
+https://addons.mozilla.org/en-US/firefox/addon/react-devtools/
+
+https://reactjs.org/blog/2019/08/15/new-react-devtools.html
+
+https://react-devtools-tutorial.now.sh/
+

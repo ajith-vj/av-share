@@ -1,0 +1,368 @@
+Redux-Thunk is a so-called middleware for the redux store.
+ It looks at every single action being dispatched and if it is a function, it calls the function.
+ 
+ import { applyMiddleware, createStore } from 'redux';
+import thunk from 'redux-thunk';
+
+import rootReducer from './rootReducer';
+import initialState from './initialState';
+
+const middlewares = [thunk];
+
+createStore(rootReducer, initialState, applyMiddleware(...middlewares));
+
+1.Redux-promise uses Flux standard actions and promises to bring clear conventions to async calls. It’s the least popular among the three. It is a middleware function that receives a promise and dispatches the resolved value of the promise. It basically returns a promise to the caller so that it can wait for the operation to finish before continuing.
+
+2.Redux-thunk allows an action creator to return a function instead of an action object. This way, the action creator becomes a thunk.
+
+A thunk is a function that is created, often automatically, to assist a call to another function (e.g API endpoint). A thunk wraps an asynchronous operation in a function.
+
+When an action creator returns a function, that function will get executed by the Redux Thunk middleware. This function doesn’t need to be pure; thus, it is allowed to have side effects, including executing asynchronous API calls or router transition. The function can also dispatch actions.
+
+To enable Redux Thunk, we use applyMiddleware().
+
+3.Redux-saga is a Redux middleware that eliminates the complexity of asynchronous processes within your React/Redux application. It leverages the power of ES6 generators to make async tasks easy to test, write, and reason.
+
+Redux-saga manages async request and side effects in a more terse way than other middlewares for this. It reduces complexities in such requests by making callbacks, promises, try/catch blocks to just simple instructions. More so, it makes your code declarative, more testable and readable. Whereas you could use Redux-thunk and Redux-saga together, Sagas are just the thing to cure your complex workflow pains.
+
+Redux-saga API exposes some methods which we need to complete our task:
+
+call is an effect creator that runs a function with optional parameters. It suspends the generator as the result returned is a promise. The generator is resumed when the promise is resolved or rejected.
+fork is an effect creator for making non-blocking calls on a function.
+takeLatest cancels any current operation and return the result of the latest action that matches its pattern.
+takeEvery returns the result of all actions that matches its pattern.
+put simply puts/dispatches actions to specified channel (an object used to send and receive messages).
+
+========================
+import React from "react";
+import ReactDOM from "react-dom";
+import ProductList from "./ProductList";
+import { createStore, applyMiddleware } from "redux";
+import { Provider } from "react-redux";
+import thunk from "redux-thunk";
+import combineReducers from "./reducers";
+
+const store = createStore(
+  combineReducers,
+  applyMiddleware(thunk)
+);
+
+function App() {
+  return (
+    <div className="App">
+      <ProductList />
+    </div>
+  );
+}
+
+const rootElement = document.getElementById("srini");
+ReactDOM.render(
+  <Provider store={store}>
+    <App />
+  </Provider>,
+  rootElement
+);
+=========================
+ProductActions.js
+
+function getProducts() {
+    return fetch("/products")
+      .then(handleErrors)
+      .then(res => res.json());
+  }
+  
+  function fakeGetProducts() {
+    return new Promise(resolve => {
+      // Resolve after a timeout so we can see the loading indicator
+      setTimeout(
+        () =>
+          resolve({
+            products: [
+              {
+                id: 0,
+                name: "Apple"
+              },
+              {
+                id: 1,
+                name: "Bananas"
+              },
+              {
+                id: 2,
+                name: "Strawberries"
+              },
+              {
+                id: 3,
+                name: "Apple"
+              },
+              {
+                id: 4,
+                name: "Grapes/banana"
+              }
+            ]
+          }),
+        1000
+      );
+    });
+  }
+  
+  export function fetchProducts() {
+    return dispatch => {
+      dispatch(fetchProductsBegin());
+      return fakeGetProducts()
+        .then(json => {
+          dispatch(fetchProductsSuccess(json.products));
+          return json.products;
+        })
+        .catch(error =>
+          dispatch(fetchProductsFailure(error))
+        );
+    };
+  }
+  
+  // Handle HTTP errors since fetch won't.
+  function handleErrors(response) {
+    if (!response.ok) {
+      throw Error(response.statusText);
+    }
+    return response;
+  }
+  
+  export const FETCH_PRODUCTS_BEGIN = "FETCH_PRODUCTS_BEGIN";
+  export const FETCH_PRODUCTS_SUCCESS =
+    "FETCH_PRODUCTS_SUCCESS";
+  export const FETCH_PRODUCTS_FAILURE =
+    "FETCH_PRODUCTS_FAILURE";
+  
+  export const fetchProductsBegin = () => ({
+    type: FETCH_PRODUCTS_BEGIN
+  });
+  
+  export const fetchProductsSuccess = products => ({
+    type: FETCH_PRODUCTS_SUCCESS,
+    payload: { products }
+  });
+  
+  export const fetchProductsFailure = error => ({
+    type: FETCH_PRODUCTS_FAILURE,
+    payload: { error }
+  });
+ ==========================
+ index.js //inside reducers folder
+ import { combineReducers } from 'redux';
+// import posts from './PostReducer';
+import products from "./ProductReducer";
+export default combineReducers({
+   
+    products
+});
+===================
+ productReducer.js
+import {
+    FETCH_PRODUCTS_BEGIN,
+    FETCH_PRODUCTS_SUCCESS,
+    FETCH_PRODUCTS_FAILURE
+  } from "../actions/ProductActions";
+  
+  const initialState = {
+    items: [],
+    loading: false,
+    error: null
+  };
+  
+  export default function productReducer(
+    state = initialState,
+    action
+  ) {
+    switch (action.type) {
+      case FETCH_PRODUCTS_BEGIN:
+        // Mark the state as "loading" so we can show a spinner or something
+        // Also, reset any errors. We're starting fresh.
+        return {
+          ...state,
+          loading: true,
+          error: null
+        };
+  
+      case FETCH_PRODUCTS_SUCCESS:
+        // All done: set loading "false".
+        // Also, replace the items with the ones from the server
+        return {
+          ...state,
+          loading: false,
+          items: action.payload.products
+        };
+  
+      case FETCH_PRODUCTS_FAILURE:
+        // The request failed, but it did stop, so set loading to "false".
+        // Save the error, and we can display it somewhere
+        // Since it failed, we don't have items to display anymore, so set it empty.
+        // This is up to you and your app though: maybe you want to keep the items
+        // around! Do whatever seems right.
+        return {
+          ...state,
+          loading: false,
+          error: action.payload.error,
+          items: []
+        };
+  
+      default:
+        // ALWAYS have a default case in a reducer
+        return state;
+    }
+  }
+================
+ProductList.js
+import React from "react";
+import { connect } from "react-redux";
+import { fetchProducts } from "./actions/ProductActions";
+
+class ProductList extends React.Component {
+  componentDidMount() {
+    this.props.dispatch(fetchProducts());
+  }
+
+  render() {
+    const { error, loading, products } = this.props;
+
+    if (error) {
+      return <div>Error! {error.message}</div>;
+    }
+
+    if (loading) {
+      return <div>Loading...</div>;
+    }
+
+    return (
+      <ol>
+        {products.map(product => (
+          <li key={product.id}>{product.id}===={product.name}</li>
+        ))}
+      </ol>
+    );
+  }
+}
+
+const mapStateToProps = state => ({
+  products: state.products.items,
+  loading: state.products.loading,
+  error: state.products.error
+});
+
+export default connect(mapStateToProps)(ProductList);
+==================
+
+https://8km3x304r8.codesandbox.io/
+
+https://codesandbox.io/s/github/tylerbuchea/my-simple-async-app
+https://www.pluralsight.com/guides/how-to-handle-ajax-with-react
+https://reactjs.org/docs/faq-ajax.html
+============
+//Get request
+import React from 'react';
+
+import axios from 'axios';
+
+export default class PersonList extends React.Component {
+  state = {
+    persons: []
+  }
+
+  componentDidMount() {
+    axios.get(`https://jsonplaceholder.typicode.com/users`)
+      .then(res => {
+        const persons = res.data;
+        this.setState({ persons });
+      })
+  }
+
+  render() {
+    return (
+      <ul>
+        { this.state.persons.map(person => <li>{person.name}</li>)}
+      </ul>
+    )
+  }
+}
+
+
+==============
+// Post Request
+import React from 'react';
+import axios from 'axios';
+
+export default class PersonList extends React.Component {
+  state = {
+    name: '',
+  }
+
+  handleChange = event => {
+    this.setState({ name: event.target.value });
+  }
+
+  handleSubmit = event => {
+    event.preventDefault();
+
+    const user = {
+      name: this.state.name
+    };
+
+    axios.post(`https://jsonplaceholder.typicode.com/users`, { user })
+      .then(res => {
+        console.log(res);
+        console.log(res.data);
+      })
+  }
+
+  render() {
+    return (
+      <div>
+        <form onSubmit={this.handleSubmit}>
+          <label>
+            Person Name:
+            <input type="text" name="name" onChange={this.handleChange} />
+          </label>
+          <button type="submit">Add</button>
+        </form>
+      </div>
+    )
+  }
+}
+
+===============
+//Delete request
+import React from 'react';
+import axios from 'axios';
+
+export default class PersonList extends React.Component {
+  state = {
+    id: '',
+  }
+
+  handleChange = event => {
+    this.setState({ id: event.target.value });
+  }
+
+  handleSubmit = event => {
+    event.preventDefault();
+
+    axios.delete(`https://jsonplaceholder.typicode.com/users/${this.state.id}`)
+      .then(res => {
+        console.log(res);
+        console.log(res.data);
+      })
+  }
+
+  render() {
+    return (
+      <div>
+        <form onSubmit={this.handleSubmit}>
+          <label>
+            Person ID:
+            <input type="text" name="id" onChange={this.handleChange} />
+          </label>
+          <button type="submit">Delete</button>
+        </form>
+      </div>
+    )
+  }
+}
